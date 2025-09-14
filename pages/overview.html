@@ -635,16 +635,32 @@
           if (!inviteList) return;
           inviteList.innerHTML = "";
 
-          // Use the original league_invites table (no email addresses stored)
-          const { data: inv, error: invErr } = await supabaseClient
-            .from("league_invites")
-            .select("code, created_at, uses, max_uses, is_revoked")
-            .eq("league_id", leagueId)
-            .order("created_at", { ascending: false })
-            .limit(50);
+          // Try full projection with created_at + order
+          let inv = null;
+          let invErr = null;
+
+          try {
+            const resp = await supabaseClient
+              .from("league_invites")
+              .select("code, created_at, uses, max_uses, is_revoked")
+              .eq("league_id", leagueId)
+              .order("created_at", { ascending: false })
+              .limit(50);
+            inv = resp.data;
+            invErr = resp.error;
+          } catch (e) {
+            invErr = e;
+          }
+
           if (invErr) {
-            // silently ignore; nothing to show
-            return;
+            // Retry with minimal columns and no order (covers schema variations)
+            const resp2 = await supabaseClient
+              .from("league_invites")
+              .select("code")
+              .eq("league_id", leagueId)
+              .limit(50);
+            inv = resp2.data;
+            // no need to check resp2.error: if it fails, we'll show "No invites yet".
           }
 
           if (!inv || inv.length === 0) {
@@ -656,18 +672,21 @@
           }
 
           for (const row of inv) {
-            const status = row.is_revoked
-              ? "Revoked"
-              : row.max_uses != null
-              ? `${row.uses || 0}/${row.max_uses} used`
-              : `${row.uses || 0} used`;
+            const status =
+              row.is_revoked === true
+                ? "Revoked"
+                : row?.max_uses != null
+                ? `${row?.uses || 0}/${row.max_uses} used`
+                : row?.uses != null
+                ? `${row.uses} used`
+                : "Active";
             const li = document.createElement("li");
             li.className =
               "rounded-xl border-1 border-neutral-100 bg-white p-3 flex items-center justify-between";
             li.innerHTML = `
-              <span class="truncate">Code: <code class="text-[12px]">${row.code}</code></span>
-              <span class="text-[11px] text-neutral-500">${status}</span>
-            `;
+    <span class="truncate">Code: <code class="text-[12px]">${row.code}</code></span>
+    <span class="text-[11px] text-neutral-500">${status}</span>
+  `;
             inviteList.appendChild(li);
           }
         }
