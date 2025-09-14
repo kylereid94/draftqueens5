@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <!--CSS-->
+    <link href="/src/output.css" rel="stylesheet" />
+
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--icons-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
+    />
+    <title>Draftqueen</title>
+  </head>
+  <body class="min-h-screen bg-neutral-100 font-lexend">
+    <div class="flex flex-col min-h-screen">
+      <!-- Top nav (match site) -->
+      <div class="flex flex-row md:h-24 h-14 border-b-1 border-b-neutral-100">
+        <!-- logo -->
+        <div
+          class="bg-neutral-900 md:border-r-1 border-r-0 border-r-neutral-100 md:w-55 w-full px-9 md:px-0 flex items-center"
+        >
+          <a
+            href="/"
+            class="md:w-55 w-full text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-200 flex flex-row items-center md:text-4xl text-2xl font-calsans gap-1 md:justify-center h-full"
+            >Draft<i
+              class="fi fi-br-crown pt-1 md:text-2xl text-sm text-palepink rotate-30"
+            ></i
+          ></a>
+          <!-- mobile menu (auth entry) -->
+          <a
+            href="/pages/auth.html"
+            class="btn btn-ghost rounded-full hover:bg-transparent hover:shadow-none text-white aspect-square size-9 flex md:hidden items-center justify-center border-lightgray-border border-1 ml-auto"
+          >
+            <i class="fi fi-rr-user pt-1 text-xs"></i>
+          </a>
+        </div>
+        <!-- desktop menus -->
+        <div class="flex-col flex-grow w-full hidden md:flex">
+          <div
+            class="bg-lightgray h-1/2 w-full flex flex-row items-center px-14"
+          >
+            <div class="flex-grow">
+              <label
+                class="input text-gray-400 bg-transparent hover:bg-lightgray-hover transition-colors focus:bg-transparent focus:border-1 focus:border-lightgray-border border-0 rounded-full h-8 shadow-none"
+              >
+                <i class="fi fi-br-search pt-1 text-sm"></i>
+                <input type="text" placeholder="Search..." />
+              </label>
+            </div>
+            <div class="flex gap-3">
+              <a
+                href="/pages/auth.html"
+                class="rounded-full h-8 px-4 text-xs font-semibold border-1 border-lightgray-border text-white hover:bg-neutral-800 flex items-center gap-2"
+                ><i class="fi fi-rr-user pt-[2px]"></i> Sign in</a
+              >
+            </div>
+          </div>
+          <div class="bg-neutral-900 h-1/2 w-full px-14 flex justify-start">
+            <ul
+              class="menu menu-horizontal text-sm text-white space-x-10 font-semibold top-menu-1"
+            >
+              <li class="top-menu-1-active"><a href="/">Home</a></li>
+              <li><a href="/pages/leagues.html">My Leagues</a></li>
+              <li><a href="/pages/Challenges.html">Challenges</a></li>
+              <li><a href="/pages/profile.html">My Profile</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <section class="flex flex-col md:flex-row">
+        <!-- left: headline + CTA -->
+        <div
+          class="bg-neutral-900 text-white flex-1 px-10 md:px-14 py-12 md:py-20"
+        >
+          <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+            Snatch the crown.<br /><span class="text-palepink"
+              >Build your fantasy drag roster.</span
+            >
+          </h1>
+          <p class="mt-4 text-neutral-300 max-w-xl">
+            Draft queens, rack up points from wins and weekly bonuses, and
+            battle your friends across every franchise that’s airing now.
+          </p>
+          <div class="mt-8 flex gap-3">
+            <a
+              href="/pages/auth.html"
+              class="btn h-12 rounded-xl bg-palepink text-neutral-900 border-0 hover:bg-white"
+              ><i class="fi fi-rr-user-add pt-[2px]"></i> Get started</a
+            >
+            <a
+              href="/pages/leagues.html"
+              class="btn h-12 rounded-xl border-1 border-neutral-200 bg-white/5 text-white hover:bg-white/10"
+              ><i class="fi fi-rr-crown pt-[2px]"></i> Explore leagues</a
+            >
+          </div>
+          <!-- trust/ticker line -->
+          <div
+            class="mt-8 border-t-[1.5px] border-neutral-700 pt-4 text-xs text-neutral-400"
+          >
+            Play on web & mobile • Private or public leagues • Weekly challenges
+          </div>
+        </div>
+        <!-- right: split CTA tiles (match hero cards on leagues page) -->
+        <div class="flex-1 grid grid-cols-2">
+          <a
+            href="/pages/create-league.html"
+            class="bg-palepink px-8 md:px-14 py-10 flex items-center justify-between font-bold group"
+          >
+            <span
+              class="text-neutral-900 text-xl md:text-3xl md:mr-10 group-hover:translate-y-[1.5px] md:group-hover:border-b-3 md:group-hover:border-b-neutral-900"
+              >Create</span
+            >
+            <span
+              class="rounded-full md:size-9 size-7 bg-neutral-900 text-white flex items-center justify-center"
+              ><i
+                class="fi fi-rr-arrow-small-right md:text-2xl text-lg pt-1"
+              ></i
+            ></span>
+          </a>
+          <a
+            href="/pages/join-league.html"
+            class="bg-white px-8 md:px-14 py-10 flex items-center justify-between font-bold group border-l-1 border-neutral-100"
+          >
+            <span
+              class="text-neutral-900 text-xl md:text-3xl md:mr-10 group-hover:translate-y-[1.5px] md:group-hover:border-b-3 md:group-hover:border-b-neutral-900"
+              >Join</span
+            >
+            <span
+              class="rounded-full md:size-9 size-7 bg-neutral-900 text-white flex items-center justify-center"
+              ><i
+                class="fi fi-rr-arrow-small-right md:text-2xl text-lg pt-1"
+              ></i
+            ></span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section class="md:mx-14 mx-10 my-12">
+        <div class="grid md:grid-cols-3 grid-cols-1 gap-6">
+          <div
+            class="rounded-3xl border-1 border-neutral-100 bg-white p-6 flex items-start gap-4"
+          >
+            <span
+              class="rounded-full size-9 bg-palepink text-neutral-900 flex items-center justify-center"
+              ><i class="fi fi-br-crown pt-[2px]"></i
+            ></span>
+            <div>
+              <h3 class="font-semibold">Draft across franchises</h3>
+              <p class="text-xs text-neutral-500 mt-1">
+                US, UK, Canada, Down Under—tabs keep it tidy when you play
+                multiple leagues.
+              </p>
+            </div>
+          </div>
+          <div
+            class="rounded-3xl border-1 border-neutral-100 bg-white p-6 flex items-start gap-4"
+          >
+            <span
+              class="rounded-full size-9 bg-neutral-900 text-white flex items-center justify-center"
+              ><i class="fi fi-rr-bolt pt-[2px]"></i
+            ></span>
+            <div>
+              <h3 class="font-semibold">Weekly challenges</h3>
+              <p class="text-xs text-neutral-500 mt-1">
+                Bonus points each episode—enter picks before the lock hits.
+              </p>
+            </div>
+          </div>
+          <div
+            class="rounded-3xl border-1 border-neutral-100 bg-white p-6 flex items-start gap-4"
+          >
+            <span
+              class="rounded-full size-9 bg-neutral-800 text-white flex items-center justify-center"
+              ><i class="fi fi-rr-leaderboard pt-[2px]"></i
+            ></span>
+            <div>
+              <h3 class="font-semibold">Live scoreboards</h3>
+              <p class="text-xs text-neutral-500 mt-1">
+                See league standings and season-wide contestant totals at a
+                glance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Preview stripes (echo card rhythm) -->
+      <section
+        class="md:mx-14 mx-10 mb-12 grid md:grid-cols-2 grid-cols-1 gap-6"
+      >
+        <a
+          href="/pages/overview.html"
+          class="rounded-3xl border-1 border-neutral-100 bg-white p-6 flex items-center justify-between group"
+        >
+          <div>
+            <p class="text-xs text-neutral-500">League</p>
+            <p class="text-2xl font-bold leading-none mt-1 text-neutral-900">
+              Overview
+            </p>
+            <p class="text-[11px] text-neutral-500 mt-1">
+              Rank, totals, and season leaderboard.
+            </p>
+          </div>
+          <span
+            class="rounded-full size-9 bg-neutral-900 text-white flex items-center justify-center group-hover:translate-x-0.5 transition-transform"
+            ><i class="fi fi-rr-arrow-small-right pt-[2px]"></i
+          ></span>
+        </a>
+        <a
+          href="/pages/scoreboard.html"
+          class="rounded-3xl border-1 border-neutral-100 bg-palepink p-6 flex items-center justify-between group"
+        >
+          <div>
+            <p class="text-xs text-neutral-700">League</p>
+            <p class="text-2xl font-bold leading-none mt-1 text-neutral-900">
+              Scoreboard
+            </p>
+            <p class="text-[11px] text-neutral-700 mt-1">
+              Members ranked by total season points.
+            </p>
+          </div>
+          <span
+            class="rounded-full size-9 bg-neutral-900 text-white flex items-center justify-center group-hover:translate-x-0.5 transition-transform"
+            ><i class="fi fi-rr-arrow-small-right pt-[2px]"></i
+          ></span>
+        </a>
+      </section>
+
+      <!-- Footer -->
+      <footer class="mt-auto md:px-14 px-10 pb-10">
+        <div
+          class="rounded-3xl border-1 border-neutral-100 bg-white p-6 flex items-center justify-between"
+        >
+          <p class="text-xs text-neutral-500">
+            © DraftQueen. Built for fans, not affiliated with any TV franchise.
+          </p>
+          <div class="hidden md:flex gap-3 text-xs">
+            <a href="/pages/auth.html" class="underline">Sign in</a>
+            <span class="text-neutral-300">•</span>
+            <a href="#" class="underline">Privacy</a>
+            <span class="text-neutral-300">•</span>
+            <a href="#" class="underline">Terms</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

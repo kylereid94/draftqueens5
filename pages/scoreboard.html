@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <!--CSS-->
+    <link href="/src/output.css" rel="stylesheet" />
+
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--icons-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
+    />
+    <title>DraftQueen</title>
+  </head>
+  <body class="min-h-screen bg-neutral-100 font-lexend">
+    <div class="flex flex-col">
+      <!--top nav (matches other pages) -->
+      <div class="flex flex-row md:h-24 h-14 border-b-1 border-b-neutral-100">
+        <!--logo-->
+        <div
+          class="bg-neutral-900 md:border-r-1 border-r-0 border-r-neutral-100 md:w-55 w-full px-9 md:px-0 flex items-center"
+        >
+          <a
+            href="/pages/leagues.html"
+            class="md:w-55 w-full text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-200 flex flex-row items-center md:text-4xl text-2xl font-calsans gap-1 md:justify-center h-full"
+            >Draft<i
+              class="fi fi-br-crown pt-1 md:text-2xl text-sm text-palepink rotate-30"
+            ></i
+          ></a>
+          <!--mobile menu-->
+          <details class="dropdown dropdown-end">
+            <summary
+              class="btn btn-ghost rounded-full hover:bg-transparent hover:shadow-none text-white aspect-square size-9 flex md:hidden items-center justify-center border-lightgray-border border-1"
+            >
+              <i class="fi fi-sr-menu-burger pt-1 text-xs"></i>
+            </summary>
+            <ul
+              class="menu dropdown-content top-menu-1 z-1 shadow-sm w-auto p-3 bg-lightgray rounded-xl mt-2 text-white space-y-1 font-semibold items-end"
+            >
+              <li>
+                <a href="/pages/leagues.html" class="text-nowrap">My Leagues</a>
+              </li>
+              <li><a href="/pages/Challenges.html">Challenges</a></li>
+              <li><a href="/pages/profile.html">My Profile</a></li>
+            </ul>
+          </details>
+        </div>
+        <!--menus-->
+        <div class="flex-col flex-grow w-full hidden md:flex">
+          <div
+            class="bg-lightgray h-1/2 w-full flex flex-row items-center px-14"
+          >
+            <div class="flex-grow">
+              <label
+                class="input text-gray-400 bg-transparent hover:bg-lightgray-hover transition-colors focus:bg-transparent focus:border-1 focus:border-lightgray-border border-0 rounded-full h-8 shadow-none"
+              >
+                <i class="fi fi-br-search pt-1 text-sm"></i>
+                <input type="text" placeholder="Search..." />
+              </label>
+            </div>
+            <div class="flex gap-8">
+              <a
+                class="btn btn-circle btn-ghost size-8 text-white border-1 border-lightgray-border"
+                ><i class="fi fi-sr-bell pt-1"></i
+              ></a>
+              <div class="avatar">
+                <div class="w-8 rounded-full ring-1 ring-white">
+                  <img
+                    src="https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-neutral-900 h-1/2 w-full px-14 flex justify-start">
+            <ul
+              class="menu menu-horizontal text-sm text-white space-x-10 font-semibold top-menu-1"
+            >
+              <li class="top-menu-1-active">
+                <a href="/pages/leagues.html">My Leagues</a>
+              </li>
+              <li><a href="/pages/Challenges.html">Challenges</a></li>
+              <li><a href="/pages/profile.html">My Profile</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!--ticker: league subnav-->
+      <div
+        class="h-12 border-b-[1.5px] border-b-neutral-900 md:px-14 px-10 flex items-center justify-between"
+      >
+        <!--left: league id breadcrumb-->
+        <div class="flex items-center gap-3 text-xs">
+          <a
+            href="/pages/leagues.html"
+            class="text-neutral-500 hover:text-neutral-700"
+            >Leagues</a
+          >
+          <span class="text-neutral-300">/</span>
+          <span class="font-semibold text-neutral-900">League Name</span>
+        </div>
+        <!--right: subnav tabs-->
+        <div class="hidden md:flex">
+          <ul
+            class="menu menu-horizontal text-xs font-semibold space-x-2 filters"
+          >
+            <li>
+              <a href="/pages/overview.html" data-keep-league>Overview</a>
+            </li>
+            <li><a href="/pages/roster.html" data-keep-league>My Roster</a></li>
+            <li>
+              <a
+                href="/pages/scoreboard.html"
+                class="filters-active"
+                data-keep-league
+                >Scoreboard</a
+              >
+            </li>
+          </ul>
+        </div>
+        <!--mobile subnav-->
+        <div class="md:hidden">
+          <select class="select rounded-full h-8 text-xs">
+            <option>Overview</option>
+            <option>My Roster</option>
+            <option selected>Scoreboard</option>
+          </select>
+        </div>
+      </div>
+
+      <!--body-->
+      <div class="md:mx-14 mx-10 my-10">
+        <!-- league header -->
+        <div
+          class="flex flex-col md:flex-row md:items-end md:justify-between gap-6"
+        >
+          <div>
+            <h1 class="font-semibold text-sm">Drag Race US</h1>
+            <h2 class="text-5xl font-bold">Season 17</h2>
+            <p class="text-neutral-500 text-xs mt-2">
+              League:
+              <span class="font-semibold text-neutral-900">League Name</span>
+            </p>
+          </div>
+          <!-- actions -->
+          <div class="flex items-center gap-3 md:gap-4 hidden">
+            <a
+              href="/pages/settings.html"
+              class="rounded-full h-9 px-4 text-xs font-semibold border-1 border-neutral-200 hover:bg-neutral-50 flex items-center gap-2"
+              ><i class="fi fi-rr-settings pt-[2px]"></i> Settings</a
+            >
+          </div>
+        </div>
+
+        <!-- leaderboard: members -->
+        <div class="mt-8">
+          <h3 class="text-lg font-semibold text-neutral-900">
+            League Scoreboard
+          </h3>
+          <p class="text-xs text-neutral-500 mt-1">
+            Members total points for the season
+          </p>
+          <div class="mt-4 rounded-3xl border-1 border-neutral-100 bg-white">
+            <!-- header row -->
+            <div
+              class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[80px_2fr_140px] gap-4 px-5 md:px-6 py-3 border-b-1 border-neutral-100 text-[11px] text-neutral-500"
+            >
+              <span>Rank</span>
+              <span>Member</span>
+              <span class="text-right">Total Points</span>
+            </div>
+            <!-- rows -->
+            <ul class="divide-y divide-neutral-100">
+              <!-- row template -->
+              <li>
+                <a
+                  href="/pages/member-details.html?id=abc"
+                  class="px-5 md:px-6 py-4 grid grid-cols-[auto_1fr_auto] md:grid-cols-[80px_2fr_140px] gap-4 items-center hover:bg-neutral-50"
+                >
+                  <div class="flex items-center">
+                    <span
+                      class="size-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-bold"
+                      >1</span
+                    >
+                  </div>
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="avatar">
+                      <div class="w-9 h-9 rounded-full ring-1 ring-neutral-200">
+                        <img
+                          src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                        />
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <p class="font-semibold truncate">Kyle</p>
+                      <p class="text-[11px] text-neutral-500 truncate">
+                        @kylereid
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-right font-bold">198</div>
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="/pages/member-details.html?id=def"
+                  class="px-5 md:px-6 py-4 grid grid-cols-[auto_1fr_auto] md:grid-cols-[80px_2fr_140px] gap-4 items-center hover:bg-neutral-50"
+                >
+                  <div class="flex items-center">
+                    <span
+                      class="size-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-bold"
+                      >2</span
+                    >
+                  </div>
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="avatar">
+                      <div class="w-9 h-9 rounded-full ring-1 ring-neutral-200">
+                        <img
+                          src="https://img.daisyui.com/images/profile/demo/3@94.webp"
+                        />
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <p class="font-semibold truncate">Julia</p>
+                      <p class="text-[11px] text-neutral-500 truncate">
+                        @julia
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-right font-bold">183</div>
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="/pages/member-details.html?id=ghi"
+                  class="px-5 md:px-6 py-4 grid grid-cols-[auto_1fr_auto] md:grid-cols-[80px_2fr_140px] gap-4 items-center hover:bg-neutral-50"
+                >
+                  <div class="flex items-center">
+                    <span
+                      class="size-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-bold"
+                      >3</span
+                    >
+                  </div>
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="avatar">
+                      <div class="w-9 h-9 rounded-full ring-1 ring-neutral-200">
+                        <img
+                          src="https://img.daisyui.com/images/profile/demo/4@94.webp"
+                        />
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <p class="font-semibold truncate">Nicholas</p>
+                      <p class="text-[11px] text-neutral-500 truncate">@nick</p>
+                    </div>
+                  </div>
+                  <div class="text-right font-bold">176</div>
+                </a>
+              </li>
+
+              <!-- skeleton rows -->
+              <li
+                class="px-5 md:px-6 py-4 grid grid-cols-[auto_1fr_auto] md:grid-cols-[80px_2fr_140px] gap-4 items-center"
+              >
+                <div class="skeleton h-8 w-8 rounded-full"></div>
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="skeleton w-9 h-9 rounded-full"></div>
+                  <div class="min-w-0 flex-1 space-y-2">
+                    <div class="skeleton h-4 w-36 rounded-full"></div>
+                    <div class="skeleton h-3 w-20 rounded-full"></div>
+                  </div>
+                </div>
+                <div class="skeleton h-6 w-10 ml-auto"></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/src/js/league-context.js"></script>
+  </body>
+</html>

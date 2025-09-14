@@ -1,0 +1,88 @@
+@import "tailwindcss";
+ @plugin "daisyui" {
+   themes: light --default;
+ }
+
+@theme {
+  --font-lexend: "Lexend", "sans-serif";
+  --font-calsans: "Cal Sans", "sans-serif";
+  --color-palepink: #ffa1c7;
+  --color-lightgray: #303030;
+  --color-lightgray-hover: color-mix(in oklab, var(--color-neutral-700) /* oklch(37.1% 0 0) = #404040 */ 60%, transparent);
+  --color-lightgray-border: color-mix(in oklab, var(--color-white) /* #fff = #ffffff */ 20%, transparent);
+}
+
+.top-menu-1 li:hover:not(.top-menu-1-active) {
+    color: var(--color-palepink);
+}
+
+.top-menu-1 li.top-menu-1-active {
+    color: var(--color-palepink);
+}
+
+.filters a:not(.filter-active) {
+    color: var(--color-neutral-600);
+    border: 1px solid var(--color-neutral-300);
+    border-radius: calc(infinity * 1px);
+    padding: 4px 12px 4px 12px;
+;}
+
+.filters a.filters-active {
+    background-color: var(--color-palepink);
+    border-color: var(--color-palepink);
+    color: var(--color-neutral-900);
+}
+
+.sm-filters .select {
+    color: var(--color-neutral-600);
+    border: 1px solid var(--color-neutral-300);
+    background-color: var(--color-neutral-100);
+    width: 140px;
+}
+
+.league-card {
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--color-neutral-600);
+    overflow: hidden;
+}
+
+.league-card:hover {
+    transform: scale(105%);
+    box-shadow: var(--shadow-sm);
+    transition-property: transform, translate, scale, rotate;
+    transition-timing-function: var(--default-transition-timing-function); /* cubic-bezier(0.4, 0, 0.2, 1) */
+    transition-duration: var(--default-transition-duration); /* 150ms */
+}
+
+.league-grid .league-card:nth-child(odd) .league-card-top {
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-lightgray);
+    font-size: 80px;
+    color: var(--color-palepink);
+}
+
+.league-grid .league-card:nth-child(odd) .arrow-button {
+    background-color: var(--color-palepink);
+}
+
+.league-grid .league-card:nth-child(even) .league-card-top {
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-palepink);
+    font-size: 80px;
+    color: var(--color-lightgray);
+}
+
+.league-grid .league-card:nth-child(even) .arrow-button {
+    background-color: var(--color-lightgray);
+}
+
+.league-card-bottom {
+    padding: calc(var(--spacing) * 4);
+
+}

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <!--CSS-->
+    <link href="/src/output.css" rel="stylesheet" />
+
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--icons-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
+    />
+
+    <title>DraftQueen - Login</title>
+    <!-- supabase js -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body class="min-h-screen bg-neutral-100 font-lexend flex flex-col">
+    <!-- top brand bar (mobile friendly) -->
+    <header class="flex h-14 w-full">
+      <div
+        class="bg-neutral-900 w-full px-6 md:px-0 flex items-center justify-center"
+      >
+        <a
+          class="text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-200 flex flex-row items-center md:text-4xl text-2xl font-calsans gap-1"
+        >
+          Draft<i
+            class="fi fi-br-crown pt-1 md:text-2xl text-sm text-palepink rotate-30"
+          ></i>
+        </a>
+      </div>
+    </header>
+
+    <!-- main -->
+    <main class="flex-1 flex items-center justify-center">
+      <div class="md:pt-0 w-full max-w-sm md:max-w-5xl">
+        <!-- auth shell -->
+        <div
+          class="grid md:grid-cols-[60%_40%] grid-cols-1 bg-white rounded-3xl overflow-hidden shadow-sm border-1 border-neutral-100"
+        >
+          <!-- left / brand panel -->
+          <section
+            class="bg-neutral-900 text-white p-8 md:p-12 md:flex hidden flex-col justify-between order-2 md:order-1"
+          >
+            <div>
+              <h1 class="md:text-3xl font-bold leading-tight">Think you can</h1>
+              <h2 class="text-5xl font-bold text-palepink">
+                Snatch the crown?
+              </h2>
+            </div>
+
+            <!-- feature list -->
+            <ul class="w-2/3 space-y-6">
+              <li class="flex flex-row items-center gap-4">
+                <div>
+                  <i class="fi fi-br-crown pt-1 text-2xl text-palepink"></i>
+                </div>
+                <div class="text-white/80 text-md">
+                  <p>
+                    <span class="font-bold text-palepink">JOIN</span> a league
+                    with friends or a public league, or create your own!
+                  </p>
+                </div>
+              </li>
+              <li class="flex flex-row items-center gap-4">
+                <div>
+                  <i class="fi fi-br-crown pt-1 text-2xl text-white"></i>
+                </div>
+                <div class="text-white/80 text-md">
+                  <p>
+                    <span class="font-bold text-white">DRAFT</span> a roster of
+                    queens that you think will do well.
+                  </p>
+                </div>
+              </li>
+              <li class="flex flex-row items-center gap-4">
+                <div>
+                  <i class="fi fi-br-crown pt-1 text-2xl text-neutral-400"></i>
+                </div>
+                <div class="text-white/80 text-md">
+                  <p>
+                    <span class="text-neutral-400 font-bold">EARN</span> points
+                    based on their placements and other bonus events.
+                  </p>
+                </div>
+              </li>
+            </ul>
+
+            <!-- subtle ticker line to echo page rhythm -->
+            <div
+              class="border-t-[1.5px] border-neutral-700 pt-4 text-xs text-neutral-400"
+            >
+              Access all the features of DraftQueen from both web and mobile!
+            </div>
+          </section>
+
+          <!-- right / form panel -->
+          <div class="p-8 md:p-10 order-1 md:order-2">
+            <!-- LOGIN FORM SECTION -->
+            <section id="loginFormSection">
+              <!-- heading -->
+              <div class="mb-4">
+                <h3
+                  class="text-3xl md:text-4xl font-bold text-center md:text-right"
+                >
+                  Login
+                </h3>
+              </div>
+
+              <!-- form card -->
+              <form class="space-y-2" id="authForm">
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend text-neutral-500 text-xs">
+                    Email
+                  </legend>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    class="input bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none w-full"
+                    required
+                  />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <div
+                    class="fieldset-legend text-neutral-500 text-xs flex items-center justify-between"
+                  >
+                    <span>Password</span>
+                    <a href="" class="text-[12px]">Forgot?</a>
+                  </div>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    class="input bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none w-full"
+                    required
+                  />
+                </fieldset>
+
+                <button
+                  type="submit"
+                  class="btn w-full h-12 rounded-xl bg-palepink text-neutral-900 border-0 hover:bg-neutral-900 hover:text-white"
+                >
+                  Sign in
+                </button>
+              </form>
+
+              <!-- meta -->
+              <p class="mt-6 text-xs text-neutral-500">
+                Don’t have an account?
+                <button
+                  type="button"
+                  id="showSignup"
+                  class="underline hover:text-neutral-700"
+                >
+                  Create one
+                </button>
+              </p>
+
+              <!-- mobile legal -->
+              <div class="mt-8 text-[11px] text-neutral-400">
+                By continuing you agree to our
+                <a class="underline" href="#">Terms</a> and
+                <a class="underline" href="#">Privacy Policy</a>.
+              </div>
+            </section>
+
+            <!-- SIGNUP FORM SECTION (hidden by default) -->
+            <section id="signupFormSection" class="hidden">
+              <!-- heading -->
+              <div class="mb-4">
+                <h3
+                  class="text-3xl md:text-4xl font-bold text-center md:text-right"
+                >
+                  Sign Up
+                </h3>
+              </div>
+
+              <!-- form card -->
+              <form class="space-y-2" id="signupForm" autocomplete="off">
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend text-neutral-500 text-xs">
+                    Email
+                  </legend>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    class="input bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none w-full"
+                    required
+                  />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend text-neutral-500 text-xs">
+                    Username
+                  </legend>
+                  <label
+                    class="input bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none w-full"
+                  >
+                    <span class="text-neutral-500">@</span>
+                    <input
+                      name="username"
+                      type="text"
+                      placeholder="john.smith"
+                      required
+                    />
+                  </label>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend text-neutral-500 text-xs">
+                    Password
+                  </legend>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Create a password"
+                    class="input bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none w-full"
+                    required
+                  />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend text-neutral-500 text-xs">
+                    Confirm Password
+                  </legend>
+                  <input
+                    type="password"
+                    name="password_confirm"
+                    placeholder="Re-enter password"
+                    class="input bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none w-full"
+                    required
+                  />
+                </fieldset>
+
+                <button
+                  type="submit"
+                  class="btn w-full h-12 rounded-xl bg-palepink text-neutral-900 border-0 hover:bg-neutral-900 hover:text-white"
+                >
+                  Sign up
+                </button>
+              </form>
+
+              <!-- meta -->
+              <p class="mt-6 text-xs text-neutral-500">
+                Already have an account?
+                <button
+                  type="button"
+                  id="showLogin"
+                  class="underline hover:text-neutral-700"
+                >
+                  Login
+                </button>
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div class="mx-auto mt-4 max-w-sm md:max-w-5xl px-6">
+      <p id="authMessage" class="text-xs text-green-700 hidden"></p>
+      <p id="authError" class="text-xs text-red-600 hidden"></p>
+    </div>
+  </body>
+  <script>
+    // Form toggle
+    const loginSection = document.getElementById("loginFormSection");
+    const signupSection = document.getElementById("signupFormSection");
+    const showSignupBtn = document.getElementById("showSignup");
+    const showLoginBtn = document.getElementById("showLogin");
+    if (showSignupBtn)
+      showSignupBtn.addEventListener("click", () => {
+        loginSection.classList.add("hidden");
+        signupSection.classList.remove("hidden");
+      });
+    if (showLoginBtn)
+      showLoginBtn.addEventListener("click", () => {
+        signupSection.classList.add("hidden");
+        loginSection.classList.remove("hidden");
+      });
+
+    // Helpers for messages
+    const msg = document.getElementById("authMessage");
+    const err = document.getElementById("authError");
+    function showMsg(t) {
+      if (!msg) return;
+      msg.textContent = t;
+      msg.classList.remove("hidden");
+    }
+    function showErr(t) {
+      if (!err) return;
+      err.textContent = t;
+      err.classList.remove("hidden");
+    }
+    function clearNotices() {
+      if (msg) msg.classList.add("hidden");
+      if (err) err.classList.add("hidden");
+    }
+
+    // Load Supabase config from /supabase.txt (expects lines KEY=VALUE)
+    let supabaseClient = null;
+    async function loadSupabase() {
+      try {
+        const res = await fetch("/supabase.txt", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to load supabase.txt");
+        const text = await res.text();
+        const map = Object.fromEntries(
+          text
+            .split(/\n+/)
+            .map((l) => l.trim())
+            .filter(Boolean)
+            .map((line) => {
+              const idx = line.indexOf("=");
+              return [line.slice(0, idx).trim(), line.slice(idx + 1).trim()];
+            })
+        );
+        const url =
+          map["SUPABASE_URL"] ||
+          map["SUPABASE_PROJECT_URL"] ||
+          (map["SUPABASE_PROJECT_ID"]
+            ? `https://${map["SUPABASE_PROJECT_ID"]}.supabase.co`
+            : "");
+        const key =
+          map["SUPABASE_ANON_KEY"] ||
+          map["PUBLIC_ANON_KEY"] ||
+          map["SUPABASE_PUBLIC_KEY"];
+        if (!url || !key)
+          throw new Error(
+            "OMDb API key missing. Add SUPABASE_URL and SUPABASE_ANON_KEY to /supabase.txt"
+          );
+        // init
+        supabaseClient = window.supabase.createClient(url, key);
+      } catch (e) {
+        showErr(e.message || "Could not initialize Supabase.");
+      }
+    }
+
+    // Profile upsert
+    async function upsertProfile(userId, username) {
+      if (!supabaseClient) return;
+      const { error } = await supabaseClient
+        .from("profiles")
+        .upsert({ id: userId, username }, { onConflict: "id" });
+      if (error) throw error;
+    }
+
+    // Update auth user metadata display name/username
+    async function setAuthDisplayName(displayName, username) {
+      if (!supabaseClient) return;
+      const { error } = await supabaseClient.auth.updateUser({
+        data: { display_name: displayName, username },
+      });
+      if (error) throw error;
+    }
+
+    // Sign Up handler
+    const signupForm = document.getElementById("signupForm");
+    if (signupForm)
+      signupForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearNotices();
+        if (!supabaseClient) await loadSupabase();
+        if (!supabaseClient) return;
+
+        const form = new FormData(signupForm);
+        const email = form.get("email");
+        const password = form.get("password");
+        const confirm = form.get("password_confirm");
+        const username = (form.get("username") || "").toString().trim();
+
+        if (!email || !password || !username)
+          return showErr("Please fill in all required fields.");
+        if (password !== confirm) return showErr("Passwords do not match.");
+
+        try {
+          // Create user with metadata
+          const { data, error } = await supabaseClient.auth.signUp({
+            email: email.toString(),
+            password: password.toString(),
+            options: { data: { display_name: username, username } },
+          });
+          if (error) throw error;
+
+          const user = data.user;
+          const session = data.session;
+
+          if (user) {
+            // Best-effort metadata ensure
+            try {
+              await setAuthDisplayName(username, username);
+            } catch {}
+            // If session exists (no email confirm required), create profile now
+            if (session) {
+              await upsertProfile(user.id, username);
+              showMsg("Account created! Redirecting...");
+              window.location.assign("/pages/leagues.html");
+            } else {
+              showMsg(
+                "Account created! Please verify your email to continue. Your profile will be set up on first login."
+              );
+              // Flip back to login UI
+              signupSection.classList.add("hidden");
+              loginSection.classList.remove("hidden");
+            }
+          }
+        } catch (e) {
+          showErr(e.message || "Sign up failed.");
+        }
+      });
+
+    // Sign In handler
+    const loginForm = document.getElementById("authForm");
+    if (loginForm)
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearNotices();
+        if (!supabaseClient) await loadSupabase();
+        if (!supabaseClient) return;
+
+        const form = new FormData(loginForm);
+        const email = form.get("email");
+        const password = form.get("password");
+
+        try {
+          const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password,
+          });
+          if (error) throw error;
+          const user = data.user;
+
+          // Ensure profile exists on first login
+          if (user) {
+            try {
+              // Try to keep metadata display_name in sync with profiles.username if missing
+              const md = user.user_metadata || {};
+              const display = md.display_name || md.username || "";
+              if (display) {
+                try {
+                  await setAuthDisplayName(display, display);
+                } catch {}
+              }
+              await upsertProfile(user.id, display || null);
+            } catch {}
+          }
+
+          // Redirect
+          const params = new URLSearchParams(window.location.search);
+          const returnTo = params.get("returnTo");
+          window.location.assign(returnTo || "/pages/leagues.html");
+        } catch (e) {
+          showErr(e.message || "Sign in failed.");
+        }
+      });
+
+    // Initialize on load if possible
+    loadSupabase();
+  </script>
+</html>

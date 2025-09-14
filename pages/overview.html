@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <!--CSS-->
+    <link href="/src/output.css" rel="stylesheet" />
+
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--icons-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
+    />
+    <title>DraftQueen</title>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body class="min-h-screen bg-neutral-100 font-lexend">
+    <div class="flex flex-col">
+      <!--top nav -->
+      <div class="flex flex-row md:h-24 h-14 border-b-1 border-b-neutral-100">
+        <!--logo-->
+        <div
+          class="bg-neutral-900 md:border-r-1 border-r-0 border-r-neutral-100 md:w-55 w-full px-9 md:px-0 flex items-center"
+        >
+          <a
+            href="/pages/leagues.html"
+            class="md:w-55 w-full text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-200 flex flex-row items-center md:text-4xl text-2xl font-calsans gap-1 md:justify-center h-full"
+            >Draft<i
+              class="fi fi-br-crown pt-1 md:text-2xl text-sm text-palepink rotate-30"
+            ></i
+          ></a>
+          <!--mobile menu-->
+          <details class="dropdown dropdown-end">
+            <summary
+              class="btn btn-ghost rounded-full hover:bg-transparent hover:shadow-none text-white aspect-square size-9 flex md:hidden items-center justify-center border-lightgray-border border-1"
+            >
+              <i class="fi fi-sr-menu-burger pt-1 text-xs"></i>
+            </summary>
+            <ul
+              class="menu dropdown-content top-menu-1 z-1 shadow-sm w-auto p-3 bg-lightgray rounded-xl mt-2 text-white space-y-1 font-semibold items-end"
+            >
+              <li>
+                <a href="/pages/leagues.html" class="text-nowrap">My Leagues</a>
+              </li>
+              <li><a href="/pages/Challenges.html">Challenges</a></li>
+              <li><a href="/pages/profile.html">My Profile</a></li>
+            </ul>
+          </details>
+        </div>
+        <!--menus-->
+        <div class="flex-col flex-grow w-full hidden md:flex">
+          <div
+            class="bg-lightgray h-1/2 w-full flex flex-row items-center px-14"
+          >
+            <div class="flex-grow">
+              <label
+                class="input text-gray-400 bg-transparent hover:bg-lightgray-hover transition-colors focus:bg-transparent focus:border-1 focus:border-lightgray-border border-0 rounded-full h-8 shadow-none"
+              >
+                <i class="fi fi-br-search pt-1 text-sm"></i>
+                <input type="text" placeholder="Search..." />
+              </label>
+            </div>
+            <div class="flex gap-8">
+              <a
+                class="btn btn-circle btn-ghost size-8 text-white border-1 border-lightgray-border"
+                ><i class="fi fi-sr-bell pt-1"></i
+              ></a>
+              <div class="avatar">
+                <div class="w-8 rounded-full ring-1 ring-white">
+                  <img
+                    src="https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-neutral-900 h-1/2 w-full px-14 flex justify-start">
+            <ul
+              class="menu menu-horizontal text-sm text-white space-x-10 font-semibold top-menu-1"
+            >
+              <li class="top-menu-1-active">
+                <a href="/pages/leagues.html">My Leagues</a>
+              </li>
+              <li><a href="/pages/Challenges.html">Challenges</a></li>
+              <li><a href="/pages/profile.html">My Profile</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!--ticker: league subnav-->
+      <div
+        class="h-12 border-b-[1.5px] border-b-neutral-900 md:px-14 px-10 flex items-center justify-between"
+      >
+        <!--left: league id breadcrumb-->
+        <div class="flex items-center gap-3 text-xs">
+          <a
+            href="/pages/leagues.html"
+            class="text-neutral-500 hover:text-neutral-700"
+            >Leagues</a
+          >
+          <span class="text-neutral-300">/</span>
+          <span id="ovLeagueNameCrumb" class="font-semibold text-neutral-900"
+            >League Name</span
+          >
+        </div>
+        <!--right: subnav tabs-->
+        <div class="hidden md:flex">
+          <ul
+            class="menu menu-horizontal text-xs font-semibold space-x-2 filters"
+          >
+            <li>
+              <a
+                class="filters-active"
+                href="/pages/overview.html"
+                data-keep-league
+                >Overview</a
+              >
+            </li>
+            <li><a href="/pages/roster.html" data-keep-league>My Roster</a></li>
+            <li>
+              <a href="/pages/scoreboard.html" data-keep-league>Scoreboard</a>
+            </li>
+          </ul>
+        </div>
+        <!--mobile subnav-->
+        <div class="md:hidden">
+          <select id="pageSelector" class="select rounded-full h-8 text-xs">
+            <option id="pageOverview" selected>Overview</option>
+            <option id="pageMyRoster">My Roster</option>
+            <option id="pageScoreboard">Scoreboard</option>
+          </select>
+        </div>
+      </div>
+
+      <!--body-->
+      <div class="md:mx-14 mx-10 my-10">
+        <!-- league header -->
+        <div
+          class="flex flex-col md:flex-row md:items-end md:justify-between gap-6"
+        >
+          <div>
+            <h1 id="ovFranchise" class="font-semibold text-sm">Franchise</h1>
+            <h2 id="ovSeason" class="text-5xl font-bold">Season</h2>
+            <p class="text-neutral-500 text-xs mt-2">
+              League:
+              <span
+                id="ovLeagueNameHeader"
+                class="font-semibold text-neutral-900"
+                >League Name</span
+              >
+            </p>
+          </div>
+          <!-- quick actions -->
+          <div class="flex items-center gap-3 md:gap-4">
+            <a
+              href="#"
+              id="openInviteModal"
+              class="bg-neutral-900 text-white rounded-full h-9 px-4 text-xs font-semibold flex items-center gap-2"
+              ><i class="fi fi-rr-user-add pt-[2px]"></i> Invite</a
+            >
+            <a
+              href="/pages/admin.html"
+              class="rounded-full h-9 px-4 text-xs font-semibold border-1 border-neutral-200 hover:bg-neutral-50 flex items-center gap-2"
+              ><i class="fi fi-rr-settings pt-[2px]"></i> Admin Portal</a
+            >
+          </div>
+        </div>
+
+        <!-- stat cards -->
+        <div class="grid md:grid-cols-3 grid-cols-1 gap-6 mt-6">
+          <!-- rank -->
+          <div
+            class="rounded-3xl border-1 border-neutral-100 bg-white p-6 flex items-center justify-between"
+          >
+            <div>
+              <p class="text-xs text-neutral-500">Your Rank</p>
+              <p class="text-4xl font-bold leading-none mt-1">
+                <span id="ovRankVal">#—</span>
+              </p>
+              <p class="text-[11px] text-neutral-400 mt-1">
+                out of <span id="ovMemberCount">—</span> members
+              </p>
+            </div>
+            <span
+              class="rounded-full size-9 bg-neutral-900 text-white flex items-center justify-center"
+              ><i class="fi fi-rr-medal pt-1"></i
+            ></span>
+          </div>
+          <!-- total points -->
+          <div
+            class="rounded-3xl border-1 border-neutral-100 bg-white p-6 flex items-center justify-between"
+          >
+            <div>
+              <p class="text-xs text-neutral-500">Your Total Points</p>
+              <p class="text-4xl font-bold leading-none mt-1">
+                <span id="ovTotalPoints">0</span>
+              </p>
+              <p class="text-[11px] text-neutral-400 mt-1">Season to date</p>
+            </div>
+            <span
+              class="rounded-full size-9 bg-palepink text-neutral-900 flex items-center justify-center"
+              ><i class="fi fi-br-crown pt-1 text-neutral-900"></i
+            ></span>
+          </div>
+          <!-- challenges CTA -->
+          <a
+            href="/pages/challenges.html"
+            class="rounded-3xl border-1 border-neutral-100 bg-palepink p-6 flex items-center justify-between group"
+          >
+            <div>
+              <p class="text-xs text-neutral-700">Gain extra points</p>
+              <p
+                class="text-xl md:text-2xl font-bold leading-none mt-1 text-neutral-900"
+              >
+                Weekly Challenges
+              </p>
+              <p class="text-[11px] text-neutral-700 mt-1">
+                Special bonuses each week
+              </p>
+            </div>
+            <span
+              class="rounded-full size-7 md:size-9 bg-neutral-900 text-white flex items-center justify-center group-hover:translate-x-0.5 transition-transform"
+              ><i class="fi fi-rr-arrow-small-right pt-1 text-xl"></i
+            ></span>
+          </a>
+        </div>
+
+        <!-- leaderboard -->
+        <div class="mt-8">
+          <h3 class="text-sm font-semibold text-neutral-900">
+            Season Leaderboard
+          </h3>
+          <p class="text-xs text-neutral-500 mt-1">
+            All contestants ranked by total points across the season.
+          </p>
+          <div class="mt-4 rounded-3xl border-1 border-neutral-100 bg-white">
+            <!-- header row -->
+            <div
+              class="grid grid-cols-[1fr_auto] md:grid-cols-[2fr_120px] gap-4 px-5 md:px-6 py-3 border-b-1 border-neutral-100 text-[11px] text-neutral-500"
+            >
+              <span>Contestant</span>
+              <span class="text-right">Total Points</span>
+            </div>
+            <!-- rows -->
+            <ul id="ovSeasonList" class="divide-y divide-neutral-100"></ul>
+
+            <!-- row template (hidden) -->
+            <template id="ovSeasonRowTpl">
+              <li
+                class="px-5 md:px-6 py-4 grid grid-cols-[1fr_auto] md:grid-cols-[2fr_120px] gap-4 items-center"
+              >
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="avatar">
+                    <div class="w-9 h-9 rounded-full ring-1 ring-neutral-200">
+                      <img src="" alt="" />
+                    </div>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="font-semibold truncate"></p>
+                  </div>
+                </div>
+                <div class="text-right font-bold"></div>
+              </li>
+            </template>
+
+            <!-- placeholders while loading -->
+            <ul id="ovSeasonPlaceholders" class="divide-y divide-neutral-100">
+              <li
+                class="px-5 md:px-6 py-4 grid grid-cols-[1fr_auto] md:grid-cols-[2fr_120px] gap-4 items-center"
+              >
+                <div
+                  class="skeleton h-9 w-full max-w-[260px] rounded-full"
+                ></div>
+                <div class="skeleton h-5 w-10 ml-auto"></div>
+              </li>
+              <li
+                class="px-5 md:px-6 py-4 grid grid-cols-[1fr_auto] md:grid-cols-[2fr_120px] gap-4 items-center"
+              >
+                <div
+                  class="skeleton h-9 w-full max-w-[260px] rounded-full"
+                ></div>
+                <div class="skeleton h-5 w-10 ml-auto"></div>
+              </li>
+              <li
+                class="px-5 md:px-6 py-4 grid grid-cols-[1fr_auto] md:grid-cols-[2fr_120px] gap-4 items-center"
+              >
+                <div
+                  class="skeleton h-9 w-full max-w-[260px] rounded-full"
+                ></div>
+                <div class="skeleton h-5 w-10 ml-auto"></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <dialog id="inviteModal" class="modal">
+      <div class="modal-box rounded-3xl">
+        <h3 class="font-bold text-lg">Invite to League</h3>
+        <p class="text-xs text-neutral-500 mt-1">
+          Send an email invite to join this league.
+        </p>
+
+        <form id="inviteForm" class="mt-4 space-y-3">
+          <label
+            class="input w-full border-1 border-neutral-200 rounded-xl h-12"
+          >
+            <i class="fi fi-rr-at pt-1 text-neutral-500"></i>
+            <input
+              type="email"
+              name="email"
+              placeholder="friend@example.com"
+              required
+            />
+          </label>
+          <button
+            class="btn bg-neutral-900 text-white rounded-xl h-11 w-full"
+            type="submit"
+          >
+            <i class="fi fi-rr-paper-plane pt-[2px]"></i> Invite
+          </button>
+          <p id="inviteMsg" class="text-xs text-green-700 hidden"></p>
+          <p id="inviteErr" class="text-xs text-red-600 hidden"></p>
+        </form>
+
+        <div class="mt-6">
+          <h4 class="text-sm font-semibold">Invites sent</h4>
+          <ul
+            id="inviteList"
+            class="mt-2 space-y-2 text-sm max-h-60 overflow-auto"
+          ></ul>
+        </div>
+
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn rounded-xl">Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      (function () {
+        const $ = (id) => document.getElementById(id);
+        const elCrumb = $("ovLeagueNameCrumb");
+        const elHdr = $("ovLeagueNameHeader");
+        const elFr = $("ovFranchise");
+        const elSe = $("ovSeason");
+        const elRank = $("ovRankVal");
+        const elCount = $("ovMemberCount");
+        const elPts = $("ovTotalPoints");
+        let supabaseClient = null;
+
+        async function loadSupabase() {
+          if (supabaseClient) return supabaseClient;
+          const res = await fetch("/supabase.txt", { cache: "no-store" });
+          if (!res.ok) throw new Error("Failed to load supabase.txt");
+          const text = await res.text();
+          const map = Object.fromEntries(
+            text
+              .split(/\n+/)
+              .map((l) => l.trim())
+              .filter(Boolean)
+              .map((line) => {
+                const i = line.indexOf("=");
+                return [line.slice(0, i).trim(), line.slice(i + 1).trim()];
+              })
+          );
+          const url =
+            map["SUPABASE_URL"] ||
+            map["SUPABASE_PROJECT_URL"] ||
+            (map["SUPABASE_PROJECT_ID"]
+              ? `https://${map["SUPABASE_PROJECT_ID"]}.supabase.co`
+              : "");
+          const key =
+            map["SUPABASE_ANON_KEY"] ||
+            map["PUBLIC_ANON_KEY"] ||
+            map["SUPABASE_PUBLIC_KEY"];
+          if (!url || !key)
+            throw new Error("Supabase URL/key missing in supabase.txt");
+          supabaseClient = window.supabase.createClient(url, key);
+          return supabaseClient;
+        }
+
+        async function requireSession() {
+          const { data } = await supabaseClient.auth.getSession();
+          if (!data?.session) {
+            const ret = encodeURIComponent(
+              "/pages/overview.html" + location.search
+            );
+            location.assign(`/pages/auth.html?returnTo=${ret}`);
+            return null;
+          }
+          return data.session;
+        }
+
+        function getLeagueId() {
+          return (
+            (window.getCurrentLeagueId && window.getCurrentLeagueId()) ||
+            new URLSearchParams(location.search).get("league")
+          );
+        }
+
+        async function fetchLeague(leagueId) {
+          const { data, error } = await supabaseClient
+            .from("leagues")
+            .select(
+              `id, name, season:seasons(id, season_number, franchise:franchises(name))`
+            )
+            .eq("id", leagueId)
+            .maybeSingle();
+          if (error) throw error;
+          return data;
+        }
+
+        async function fetchMemberCount(leagueId) {
+          const { count, error } = await supabaseClient
+            .from("league_members")
+            .select("user_id", { count: "exact", head: true })
+            .eq("league_id", leagueId);
+          if (error) throw error;
+          return count || 0;
+        }
+
+        async function fetchMyRankAndPoints(leagueId, userId) {
+          // Try fast path via v_member_rank
+          let rank = null,
+            total = 0;
+          try {
+            const { data, error } = await supabaseClient
+              .from("v_member_rank")
+              .select("total_points, rank")
+              .eq("league_id", leagueId)
+              .eq("user_id", userId)
+              .maybeSingle();
+            if (!error && data) {
+              rank = data.rank;
+              total = data.total_points || 0;
+              return { rank, total };
+            }
+          } catch {}
+          // Fallback: compute from v_member_totals
+          const { data: all, error: totErr } = await supabaseClient
+            .from("v_member_totals")
+            .select("user_id, total_points")
+            .eq("league_id", leagueId)
+            .order("total_points", { ascending: false, nullsFirst: false });
+          if (totErr) throw totErr;
+          const idx = (all || []).findIndex((r) => r.user_id === userId);
+          total =
+            (all || []).find((r) => r.user_id === userId)?.total_points || 0;
+          rank = idx >= 0 ? idx + 1 : null;
+          return { rank, total };
+        }
+
+        function setText(el, text) {
+          if (!el) return;
+          el.textContent = text;
+        }
+
+        // ===== Season leaderboard wiring (moved inside IIFE so it can use supabaseClient) =====
+        const listEl = document.getElementById("ovSeasonList");
+        const tplRow = document.getElementById("ovSeasonRowTpl");
+        const phEl = document.getElementById("ovSeasonPlaceholders");
+
+        function showSeasonPlaceholders(show = true) {
+          if (!phEl) return;
+          phEl.style.display = show ? "" : "none";
+        }
+
+        async function fetchSeasonTotals(leagueId) {
+          const { data, error } = await supabaseClient
+            .from("v_season_contestant_totals")
+            .select("contestant_id, total_points")
+            .eq("league_id", leagueId)
+            .order("total_points", { ascending: false, nullsFirst: false })
+            .limit(100);
+          if (error) throw error;
+          return data || [];
+        }
+
+        async function fetchContestants(ids) {
+          if (!ids.length) return [];
+          const { data, error } = await supabaseClient
+            .from("contestants")
+            .select("id, stage_name, avatar_url")
+            .in("id", ids);
+          if (error) throw error;
+          return data || [];
+        }
+
+        function renderSeasonRows(rows, contestantsById) {
+          if (!listEl || !tplRow) return;
+          listEl.innerHTML = "";
+          for (const r of rows) {
+            const c = contestantsById.get(r.contestant_id);
+            const node = tplRow.content.firstElementChild.cloneNode(true);
+            const img = node.querySelector("img");
+            const name = node.querySelector("p.font-semibold");
+            const pts = node.querySelector("div.text-right");
+            if (img)
+              img.src =
+                c?.avatar_url ||
+                "https://img.daisyui.com/images/profile/demo/2@94.webp";
+            if (img) img.alt = c?.stage_name || "Contestant";
+            if (name) name.textContent = c?.stage_name || "Unknown";
+            if (pts) pts.textContent = r.total_points ?? 0;
+            listEl.appendChild(node);
+          }
+        }
+
+        (async () => {
+          try {
+            await loadSupabase();
+            const session = await requireSession();
+            if (!session) return;
+            const leagueId = getLeagueId();
+            if (!leagueId) return;
+
+            // League & header
+            const lg = await fetchLeague(leagueId);
+            if (lg) {
+              setText(elCrumb, lg.name || "League");
+              setText(elHdr, lg.name || "League");
+              setText(elFr, lg.season?.franchise?.name || "Franchise");
+              setText(
+                elSe,
+                lg.season?.season_number
+                  ? `Season ${lg.season.season_number}`
+                  : "Season"
+              );
+            }
+
+            // Members count
+            const mcount = await fetchMemberCount(leagueId);
+            if (elCount) setText(elCount, mcount);
+
+            // Rank & points for current user
+            const { rank, total } = await fetchMyRankAndPoints(
+              leagueId,
+              session.user.id
+            );
+            // Season leaderboard
+            showSeasonPlaceholders(true);
+            try {
+              const totals = await fetchSeasonTotals(leagueId);
+              const ids = totals.map((t) => t.contestant_id);
+              const contestants = await fetchContestants(ids);
+              const mapById = new Map(contestants.map((c) => [c.id, c]));
+              renderSeasonRows(totals, mapById);
+            } finally {
+              showSeasonPlaceholders(false);
+            }
+            if (elRank) setText(elRank, rank ? `#${rank}` : "#—");
+            if (elPts) setText(elPts, total ?? 0);
+          } catch (e) {
+            console.error(e);
+          }
+        })();
+
+        // Mobile subnav: page selector routing within current league
+        const pageSelector = document.getElementById("pageSelector");
+        function gotoLeaguePage(path) {
+          const leagueId = getLeagueId();
+          const url = new URL(path, location.origin);
+          if (leagueId) url.searchParams.set("league", leagueId);
+          location.assign(url.pathname + "?" + url.searchParams.toString());
+        }
+        if (pageSelector) {
+          pageSelector.addEventListener("change", () => {
+            const selected = pageSelector.options[pageSelector.selectedIndex];
+            const id = selected && selected.id;
+            switch (id) {
+              case "pageOverview":
+                gotoLeaguePage("/pages/overview.html");
+                break;
+              case "pageMyRoster":
+                gotoLeaguePage("/pages/roster.html");
+                break;
+              case "pageScoreboard":
+                gotoLeaguePage("/pages/scoreboard.html");
+                break;
+            }
+          });
+        }
+        // --- Invite modal wiring ---
+        const openInviteModalBtn = document.getElementById("openInviteModal");
+        const inviteModal = document.getElementById("inviteModal");
+        const inviteForm = document.getElementById("inviteForm");
+        const inviteList = document.getElementById("inviteList");
+        const inviteMsg = document.getElementById("inviteMsg");
+        const inviteErr = document.getElementById("inviteErr");
+
+        function showInviteMsg(t) {
+          if (!inviteMsg) return;
+          inviteMsg.textContent = t;
+          inviteMsg.classList.remove("hidden");
+          if (inviteErr) inviteErr.classList.add("hidden");
+        }
+        function showInviteErr(t) {
+          if (!inviteErr) return;
+          inviteErr.textContent = t;
+          inviteErr.classList.remove("hidden");
+          if (inviteMsg) inviteMsg.classList.add("hidden");
+        }
+        function clearInviteNotices() {
+          if (inviteMsg) inviteMsg.classList.add("hidden");
+          if (inviteErr) inviteErr.classList.add("hidden");
+        }
+
+        async function refreshInviteList(leagueId) {
+          if (!inviteList) return;
+          inviteList.innerHTML = "";
+
+          // Use the original league_invites table (no email addresses stored)
+          const { data: inv, error: invErr } = await supabaseClient
+            .from("league_invites")
+            .select("code, created_at, uses, max_uses, is_revoked")
+            .eq("league_id", leagueId)
+            .order("created_at", { ascending: false })
+            .limit(50);
+          if (invErr) {
+            // silently ignore; nothing to show
+            return;
+          }
+
+          if (!inv || inv.length === 0) {
+            const li = document.createElement("li");
+            li.className = "text-[12px] text-neutral-500 px-2";
+            li.textContent = "No invites yet.";
+            inviteList.appendChild(li);
+            return;
+          }
+
+          for (const row of inv) {
+            const status = row.is_revoked
+              ? "Revoked"
+              : row.max_uses != null
+              ? `${row.uses || 0}/${row.max_uses} used`
+              : `${row.uses || 0} used`;
+            const li = document.createElement("li");
+            li.className =
+              "rounded-xl border-1 border-neutral-100 bg-white p-3 flex items-center justify-between";
+            li.innerHTML = `
+              <span class="truncate">Code: <code class="text-[12px]">${row.code}</code></span>
+              <span class="text-[11px] text-neutral-500">${status}</span>
+            `;
+            inviteList.appendChild(li);
+          }
+        }
+
+        if (openInviteModalBtn && inviteModal) {
+          openInviteModalBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            clearInviteNotices();
+            const leagueId = getLeagueId();
+            if (!leagueId) return;
+            await refreshInviteList(leagueId);
+            inviteModal.showModal();
+          });
+        }
+
+        if (inviteForm) {
+          inviteForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            clearInviteNotices();
+            const leagueId = getLeagueId();
+            const email = new FormData(inviteForm).get("email");
+            try {
+              const { data: sess } = await supabaseClient.auth.getSession();
+              const token = sess?.session?.access_token;
+              const res = await fetch(
+                "/.netlify/functions/send-league-invite",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({ league_id: leagueId, email }),
+                }
+              );
+              if (!res.ok) throw new Error(await res.text());
+              showInviteMsg("Invite sent!");
+              inviteForm.reset();
+              await refreshInviteList(leagueId);
+            } catch (err) {
+              showInviteErr(err.message || "Failed to send invite.");
+            }
+          });
+        }
+      })();
+    </script>
+    <script src="/src/js/league-context.js"></script>
+  </body>
+</html>

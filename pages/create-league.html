@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <!--CSS-->
+    <link href="/src/output.css" rel="stylesheet" />
+
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--icons-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
+    />
+    <title>DraftQueen</title>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body class="min-h-screen bg-neutral-100 font-lexend">
+    <div class="flex flex-col">
+      <!--top nav (matches overview/leagues) -->
+      <div class="flex flex-row md:h-24 h-14 border-b-1 border-b-neutral-100">
+        <!--logo-->
+        <div
+          class="bg-neutral-900 md:border-r-1 border-r-0 border-r-neutral-100 md:w-55 w-full px-9 md:px-0 flex items-center"
+        >
+          <a
+            class="md:w-55 w-full text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-200 flex flex-row items-center md:text-4xl text-2xl font-calsans gap-1 md:justify-center h-full"
+            >Draft<i
+              class="fi fi-br-crown pt-1 md:text-2xl text-sm text-palepink rotate-30"
+            ></i
+          ></a>
+          <!--mobile menu-->
+          <details class="dropdown dropdown-end">
+            <summary
+              class="btn btn-ghost rounded-full hover:bg-transparent hover:shadow-none text-white aspect-square size-9 flex md:hidden items-center justify-center border-lightgray-border border-1"
+            >
+              <i class="fi fi-sr-menu-burger pt-1 text-xs"></i>
+            </summary>
+            <ul
+              class="menu dropdown-content top-menu-1 z-1 shadow-sm w-auto p-3 bg-lightgray rounded-xl mt-2 text-white space-y-1 font-semibold items-end"
+            >
+              <li>
+                <a href="/pages/leagues.html" class="text-nowrap">My Leagues</a>
+              </li>
+              <li><a href="/pages/Challenges.html">Challenges</a></li>
+              <li><a href="/pages/profile.html">My Profile</a></li>
+            </ul>
+          </details>
+        </div>
+        <!--menus-->
+        <div class="flex-col flex-grow w-full hidden md:flex">
+          <div
+            class="bg-lightgray h-1/2 w-full flex flex-row items-center px-14"
+          >
+            <div class="flex-grow">
+              <label
+                class="input text-gray-400 bg-transparent hover:bg-lightgray-hover transition-colors focus:bg-transparent focus:border-1 focus:border-lightgray-border border-0 rounded-full h-8 shadow-none"
+              >
+                <i class="fi fi-br-search pt-1 text-sm"></i>
+                <input type="text" placeholder="Search..." />
+              </label>
+            </div>
+            <div class="flex gap-8">
+              <a
+                class="btn btn-circle btn-ghost size-8 text-white border-1 border-lightgray-border"
+                ><i class="fi fi-sr-bell pt-1"></i
+              ></a>
+              <div class="avatar">
+                <div class="w-8 rounded-full ring-1 ring-white">
+                  <img
+                    src="https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-neutral-900 h-1/2 w-full px-14 flex justify-start">
+            <ul
+              class="menu menu-horizontal text-sm text-white space-x-10 font-semibold top-menu-1"
+            >
+              <li class="top-menu-1-active">
+                <a href="/pages/leagues.html">My Leagues</a>
+              </li>
+              <li><a href="/pages/Challenges.html">Challenges</a></li>
+              <li><a href="/pages/profile.html">My Profile</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!--ticker / breadcrumb-->
+      <div
+        class="h-12 border-b-[1.5px] border-b-neutral-900 md:px-14 px-10 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3 text-xs">
+          <a
+            href="/pages/leagues.html"
+            class="text-neutral-500 hover:text-neutral-700"
+            >Leagues</a
+          >
+          <span class="text-neutral-300">/</span>
+          <span class="font-semibold text-neutral-900">Create League</span>
+        </div>
+      </div>
+
+      <!--body-->
+      <div class="flex">
+        <div class="md:mx-14 mx-6 my-10 grid md:grid-cols-3 grid-cols-1 gap-6">
+          <!-- form column -->
+          <section
+            class="md:col-span-2 bg-white rounded-3xl border-1 border-neutral-100 p-6 md:p-8"
+          >
+            <div class="mb-6">
+              <h1 class="text-3xl md:text-4xl font-bold">Create a League</h1>
+              <p class="text-xs text-neutral-500 mt-1">
+                Set your rules for this season’s play.
+              </p>
+            </div>
+
+            <form
+              id="createLeagueForm"
+              class="space-y-5 grid grid-cols-1 md:grid-cols-2"
+            >
+              <!-- League name -->
+              <fieldset class="fieldset col-span-2">
+                <legend class="fieldset-legend text-neutral-500 text-xs">
+                  League name
+                </legend>
+                <input
+                  type="text"
+                  name="league_name"
+                  placeholder="e.g., Werk Room Warriors"
+                  class="input w-full bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none"
+                  required
+                />
+              </fieldset>
+
+              <!-- League Icon -->
+              <fieldset class="fieldset col-span-2">
+                <legend class="fieldset-legend text-neutral-500 text-xs">
+                  League Icon
+                </legend>
+                <div
+                  class="grid grid-cols-7 md:grid-cols-9 overflow-y-auto border-1 border-neutral-200 rounded-lg p-2 h-24"
+                >
+                  <!--icon button template-->
+                  <div>
+                    <input
+                      type="radio"
+                      aria-label=""
+                      class="hidden peer"
+                      id="btnCrown"
+                      name="leagueIcon"
+                    />
+                    <label
+                      for="btnCrown"
+                      class="btn btn-ghost peer-checked:text-palepink peer-checked:bg-neutral-900 btn-sm md:btn-lg btn-circle"
+                      ><i class="fi fi-rr-crown pt-1"></i
+                    ></label>
+                  </div>
+                  <!--icon button placeholder-->
+                  <div class="skeleton rounded-full md:size-12 size-8"></div>
+                </div>
+              </fieldset>
+
+              <!-- Elimination type -->
+              <fieldset class="col-span-2">
+                <legend class="fieldset-legend text-neutral-500 text-xs">
+                  Elimination type
+                </legend>
+                <div class="grid md:grid-cols-2 grid-cols-1 gap-3">
+                  <label
+                    class="cursor-pointer rounded-2xl border-1 border-neutral-200 hover:bg-neutral-50 p-4 flex items-center gap-3"
+                  >
+                    <input
+                      type="radio"
+                      name="elim_type"
+                      value="keep_and_lose_spot"
+                      class="radio radio-sm mt-[2px]"
+                      checked
+                    />
+                    <div>
+                      <p class="font-semibold">Queen stays; lose roster spot</p>
+                      <p class="text-[11px] text-neutral-500">
+                        Eliminated queens remain on rosters and occupy a slot.
+                      </p>
+                    </div>
+                  </label>
+                  <label
+                    class="cursor-pointer rounded-2xl border-1 border-neutral-200 hover:bg-neutral-50 p-4 flex items-center gap-3"
+                  >
+                    <input
+                      type="radio"
+                      name="elim_type"
+                      value="free_agent_pool"
+                      class="radio radio-sm mt-[2px]"
+                    />
+                    <div>
+                      <p class="font-semibold">Free agent replacement</p>
+                      <p class="text-[11px] text-neutral-500">
+                        Replace eliminated queens from a shared free agent pool.
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Roster size -->
+              <div class="grid grid-cols-2 col-span-2 gap-5 items-center">
+                <fieldset class="fieldset w-full">
+                  <legend class="fieldset-legend text-neutral-500 text-xs">
+                    Roster size
+                  </legend>
+                  <input
+                    type="number"
+                    name="roster_size"
+                    min="1"
+                    max="12"
+                    step="1"
+                    value="5"
+                    class="input w-full bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none"
+                    required
+                  />
+                </fieldset>
+                <!-- Allow trades toggle -->
+                <fieldset class="fieldset flex items-center">
+                  <input
+                    type="checkbox"
+                    name="allow_trades"
+                    class="toggle"
+                    checked
+                  />
+                  <p class="text-md">Allow Trades</p>
+                </fieldset>
+              </div>
+
+              <!-- Trading lock window -->
+              <fieldset class="fieldset col-span-2">
+                <legend class="fieldset-legend text-neutral-500 text-xs">
+                  Trading locks (days before episode airs)
+                </legend>
+                <input
+                  type="number"
+                  name="trade_lock_days"
+                  min="0"
+                  max="14"
+                  step="1"
+                  value="2"
+                  class="input w-20 bg-transparent hover:bg-neutral-50 focus:bg-transparent focus:border-1 focus:border-lightgray-border border-1 border-neutral-200 rounded-xl h-12 shadow-none"
+                  required
+                />
+              </fieldset>
+
+              <!-- submit -->
+              <div class="pt-2 flex items-center gap-3">
+                <button
+                  type="submit"
+                  class="btn h-12 rounded-xl bg-neutral-900 text-white border-0 hover:bg-neutral-800"
+                >
+                  Create League
+                </button>
+              </div>
+              <p id="createLeagueMsg" class="text-xs text-green-700 hidden">
+                League created!
+              </p>
+              <p id="createLeagueErr" class="text-xs text-red-600 hidden"></p>
+            </form>
+          </section>
+
+          <!-- side column: summary / tips -->
+          <aside
+            class="bg-white rounded-3xl border-1 border-neutral-100 p-6 md:p-8"
+          >
+            <h2 class="text-sm font-semibold">Quick summary</h2>
+            <ul
+              class="mt-3 text-xs text-neutral-600 space-y-2"
+              id="summaryList"
+            >
+              <li>
+                League name:
+                <span
+                  class="font-semibold text-neutral-900"
+                  data-sum="league_name"
+                  >—</span
+                >
+              </li>
+              <li>
+                Elimination:
+                <span
+                  class="font-semibold text-neutral-900"
+                  data-sum="elim_type"
+                  >Queen stays; lose roster spot</span
+                >
+              </li>
+              <li>
+                Roster size:
+                <span
+                  class="font-semibold text-neutral-900"
+                  data-sum="roster_size"
+                  >5</span
+                >
+              </li>
+              <li>
+                Trades:
+                <span
+                  class="font-semibold text-neutral-900"
+                  data-sum="allow_trades"
+                  >Enabled</span
+                >
+              </li>
+              <li>
+                Trade lock:
+                <span
+                  class="font-semibold text-neutral-900"
+                  data-sum="trade_lock_days"
+                  >2</span
+                >
+                day(s) prior
+              </li>
+            </ul>
+
+            <div
+              class="mt-6 border-t-[1.5px] border-neutral-100 pt-4 text-[11px] text-neutral-500"
+            >
+              Tip: For busy leagues, consider a smaller lock window so members
+              can react to teasers without last‑minute swaps.
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <!-- lightweight live summary sync (no external deps) -->
+    <script>
+      const form = document.getElementById("createLeagueForm");
+      const sync = () => {
+        const data = new FormData(form);
+        const get = (n) => data.get(n);
+        const set = (k, v) => {
+          const el = document.querySelector(`[data-sum="${k}"]`);
+          if (el) el.textContent = v;
+        };
+        set("league_name", get("league_name") || "—");
+        set("roster_size", get("roster_size"));
+        set("trade_lock_days", get("trade_lock_days"));
+        set("allow_trades", form.allow_trades.checked ? "Enabled" : "Disabled");
+        set(
+          "elim_type",
+          get("elim_type") === "free_agent_pool"
+            ? "Free agent replacement"
+            : "Queen stays; lose roster spot"
+        );
+      };
+      form.addEventListener("input", sync);
+      form.addEventListener("change", sync);
+      sync();
+    </script>
+    <!-- Create League wiring -->
+    <script>
+      (function () {
+        const form = document.getElementById("createLeagueForm");
+        const btn = form?.querySelector('button[type="submit"]');
+        const msg = document.getElementById("createLeagueMsg");
+        const err = document.getElementById("createLeagueErr");
+        let supabaseClient = null;
+
+        function showMsg(t) {
+          if (!msg) return;
+          msg.textContent = t;
+          msg.classList.remove("hidden");
+        }
+        function showErr(t) {
+          if (!err) return;
+          err.textContent = t;
+          err.classList.remove("hidden");
+        }
+        function clearNotices() {
+          if (msg) msg.classList.add("hidden");
+          if (err) err.classList.add("hidden");
+        }
+
+        // Read franchise from URL (?franchise=us) or default to 'us'
+        function getFranchiseSlug() {
+          const q = new URLSearchParams(location.search);
+          const slug = (q.get("franchise") || "us").toLowerCase();
+          return slug;
+        }
+
+        // Supabase init from /supabase.txt
+        async function loadSupabase() {
+          if (supabaseClient) return supabaseClient;
+          const res = await fetch("/supabase.txt", { cache: "no-store" });
+          if (!res.ok) throw new Error("Failed to load supabase.txt");
+          const text = await res.text();
+          const map = Object.fromEntries(
+            text
+              .split(/\n+/)
+              .map((l) => l.trim())
+              .filter(Boolean)
+              .map((line) => {
+                const idx = line.indexOf("=");
+                return [line.slice(0, idx).trim(), line.slice(idx + 1).trim()];
+              })
+          );
+          const url =
+            map["SUPABASE_URL"] ||
+            map["SUPABASE_PROJECT_URL"] ||
+            (map["SUPABASE_PROJECT_ID"]
+              ? `https://${map["SUPABASE_PROJECT_ID"]}.supabase.co`
+              : "");
+          const key =
+            map["SUPABASE_ANON_KEY"] ||
+            map["PUBLIC_ANON_KEY"] ||
+            map["SUPABASE_PUBLIC_KEY"];
+          if (!url || !key)
+            throw new Error("Supabase URL/key missing in supabase.txt");
+          supabaseClient = window.supabase.createClient(url, key);
+          return supabaseClient;
+        }
+
+        async function requireSession() {
+          const { data } = await supabaseClient.auth.getSession();
+          if (!data?.session) {
+            const ret = encodeURIComponent(
+              "/pages/create-league.html" + location.search
+            );
+            location.assign(`/pages/auth.html?returnTo=${ret}`);
+            return null;
+          }
+          return data.session;
+        }
+
+        // Resolve current season for a franchise slug
+        async function getCurrentSeasonForFranchise(slug) {
+          // Get franchise id/name
+          const { data: f, error: fErr } = await supabaseClient
+            .from("franchises")
+            .select("id, name, slug")
+            .eq("slug", slug)
+            .single();
+          if (fErr) throw fErr;
+
+          const { data: s, error: sErr } = await supabaseClient
+            .from("seasons")
+            .select("id, season_number, is_current")
+            .eq("franchise_id", f.id)
+            .eq("is_current", true)
+            .limit(1)
+            .maybeSingle();
+          if (sErr) throw sErr;
+          if (!s)
+            throw new Error(`No current season set for franchise “${f.name}”.`);
+          return { franchise: f, season: s };
+        }
+
+        function disable(btnEl, on = true) {
+          if (!btnEl) return;
+          btnEl.disabled = on;
+          if (on) {
+            btnEl.classList.add("loading");
+          } else {
+            btnEl.classList.remove("loading");
+          }
+        }
+
+        async function createLeague(payload) {
+          const { data, error } = await supabaseClient.rpc("create_league", {
+            p_season: payload.seasonId,
+            p_name: payload.name,
+            p_roster_size: payload.rosterSize,
+            p_elim_mode: payload.elimMode,
+            p_trades_enabled: payload.tradesEnabled,
+            p_trade_lock_days: payload.tradeLockDays,
+          });
+          if (error) throw error;
+          const leagueId = (Array.isArray(data) ? data[0] : data) || data;
+          return leagueId; // uuid
+        }
+
+        if (form) {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            clearNotices();
+            disable(btn, true);
+            try {
+              await loadSupabase();
+              const session = await requireSession();
+              if (!session) return; // redirected to auth
+
+              const franchiseSlug = getFranchiseSlug();
+              const { season } = await getCurrentSeasonForFranchise(
+                franchiseSlug
+              );
+
+              const data = new FormData(form);
+              const name = (data.get("league_name") || "").toString().trim();
+              const elimMode =
+                data.get("elim_type") === "free_agent_pool"
+                  ? "free_agent_pool"
+                  : "keep_and_lose_spot";
+              const rosterSize = parseInt(data.get("roster_size"), 10) || 5;
+              const tradesEnabled = form.allow_trades?.checked ?? true;
+              const tradeLockDays =
+                parseInt(data.get("trade_lock_days"), 10) || 2;
+
+              if (!name) throw new Error("Please enter a league name.");
+
+              const leagueId = await createLeague({
+                ownerId: session.user.id,
+                seasonId: season.id,
+                name,
+                elimMode,
+                rosterSize,
+                tradesEnabled,
+                tradeLockDays,
+              });
+
+              showMsg("League created! Redirecting...");
+              const url = new URL("/pages/overview.html", location.origin);
+              url.searchParams.set("league", leagueId);
+              location.assign(url.pathname + "?" + url.searchParams.toString());
+            } catch (e) {
+              console.error(e);
+              showErr(e?.message || "Could not create league.");
+            } finally {
+              disable(btn, false);
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

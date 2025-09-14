@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <!--CSS-->
+    <link href="/src/output.css" rel="stylesheet" />
+
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--icons-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
+    />
+
+    <title>DraftQueen</title>
+  </head>
+  <body class="min-h-screen bg-neutral-100 font-lexend">
+    <div class="flex flex-col">
+      <!--top nav-->
+      <div class="flex flex-row md:h-24 h-14 border-b-1 border-b-neutral-100">
+        <!--logo-->
+        <div
+          class="bg-neutral-900 md:border-r-1 border-r-0 border-r-neutral-100 md:w-55 w-full px-9 md:px-0 flex items-center"
+        >
+          <a
+            href="/pages/leagues.html"
+            class="md:w-55 w-full text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-200 flex flex-row items-center md:text-4xl text-2xl font-calsans gap-1 md:justify-center h-full"
+            >Draft<i
+              class="fi fi-br-crown pt-1 md:text-2xl text-sm text-palepink rotate-30"
+            ></i
+          ></a>
+          <details class="dropdown dropdown-end">
+            <summary
+              class="btn btn-ghost rounded-full hover:bg-transparent hover:shadow-none text-white aspect-square size-9 flex md:hidden items-center justify-center border-lightgray-border border-1"
+            >
+              <i class="fi fi-sr-menu-burger pt-1 text-xs"></i>
+            </summary>
+            <ul
+              class="menu dropdown-content top-menu-1 z-1 shadow-sm w-auto p-3 bg-lightgray rounded-xl mt-2 text-white space-y-1 font-semibold items-end"
+            >
+              <li class="top-menu-1-active">
+                <a href="/pages/leagues.html" class="text-nowrap">My Leagues</a>
+              </li>
+              <li><a href="/pages/Challenges.html">Challenges</a></li>
+              <li><a href="/pages/profile.html">My Profile</a></li>
+            </ul>
+          </details>
+        </div>
+        <!--menus-->
+        <div class="flex-col flex-grow w-full hidden md:flex">
+          <div
+            class="bg-lightgray h-1/2 w-full flex flex-row items-center px-14"
+          >
+            <div class="flex-grow">
+              <label
+                class="input text-gray-400 bg-transparent hover:bg-lightgray-hover transition-colors focus:bg-transparent focus:border-1 focus:border-lightgray-border border-0 rounded-full h-8 shadow-none"
+              >
+                <i class="fi fi-br-search pt-1 text-sm"></i>
+                <input type="text" placeholder="Search..." />
+              </label>
+            </div>
+            <div class="flex gap-8">
+              <a
+                class="btn btn-circle btn-ghost size-8 text-white border-1 border-lightgray-border"
+                ><i class="fi fi-sr-bell pt-1"></i>
+              </a>
+              <div class="avatar">
+                <div class="w-8 rounded-full ring-1 ring-white">
+                  <img
+                    src="https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-neutral-900 h-1/2 w-full px-14 flex justify-start">
+            <ul
+              class="menu menu-horizontal text-sm text-white space-x-10 font-semibold top-menu-1"
+            >
+              <li class="top-menu-1-active"><a>My Leagues</a></li>
+              <li><a>Challenges</a></li>
+              <li><a>My Profile</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!--main-->
+      <div class="flex-grow">
+        <!--hero-->
+        <div class="flex md:h-35">
+          <!--create-->
+          <a
+            href="/pages/create-league.html"
+            class="bg-palepink h-full w-1/2 px-10 py-8 md:pl-14 flex flex-row items-center justify-between md:justify-start font-bold group"
+          >
+            <h1
+              class="text-neutral-900 md:text-4xl text-xl md:mr-10 mr-0 md:group-hover:border-b-3 md:group-hover:border-b-neutral-900 md:group-hover:translate-y-[1.5px]"
+            >
+              Create <span class="hidden md:inline-block">a League</span>
+            </h1>
+            <span
+              class="rounded-full md:size-7 size-5 aspect-square bg-neutral-900 text-white mt-1 flex items-center justify-center"
+              ><i class="fi fi-rr-arrow-small-right md:text-xl text-sm pt-1"></i
+            ></span>
+          </a>
+          <!--join-->
+          <a
+            href="/pages/join-league.html"
+            class="group bg-neutral-900 h-full w-1/2 px-10 py-8 md:pl-14 flex flex-row items-center justify-between md:justify-start md:text-4xl text-xl font-bold"
+          >
+            <h1
+              class="text-white md:mr-10 mr-0 md:group-hover:border-b-3 md:group-hover:border-b-palepink md:group-hover:translate-y-[1.5px]"
+            >
+              Join <span class="hidden md:inline-block">a League</span>
+            </h1>
+            <span
+              class="btn btn-circle btn-ghost md:size-7 size-5 aspect-square bg-palepink text-neutral-900 mt-1"
+              ><i class="fi fi-rr-arrow-small-right md:text-xl text-sm pt-1"></i
+            ></span>
+          </a>
+        </div>
+        <!--ticker-->
+        <div
+          class="h-12 border-b-[1.5px] border-b-neutral-900 md:px-14 px-10 flex items-center"
+        >
+          <!--md<= filters-->
+          <div class="hidden md:flex">
+            <!--franchise-->
+            <div class="flex flex-row items-center flex-grow">
+              <h1 class="text-xs text-neutral-900 mr-2">Franchises</h1>
+              <ul
+                class="menu menu-horizontal text-xs font-semibold space-x-2 top-menu-1 filters"
+              >
+                <li><a class="filters-active" data-franchise="us">US</a></li>
+                <li><a data-franchise="uk">UK</a></li>
+                <li><a data-franchise="canada">Canada</a></li>
+                <li><a data-franchise="downunder">Down Under</a></li>
+              </ul>
+              <a
+                class="text-neutral-400 ml-2 hover:text-neutral-600 hover:cursor-pointer"
+                >+</a
+              >
+            </div>
+          </div>
+          <!--sm filters-->
+          <div class="flex md:hidden sm-filters">
+            <select class="select rounded-full h-8">
+              <option disabled>Franchise</option>
+              <option selected value="us">US</option>
+              <option value="uk">UK</option>
+              <option value="canada">Canada</option>
+              <option value="downunder">Down Under</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!--body-->
+      <div class="md:mx-14 mx-10 my-10">
+        <!--title-->
+        <div>
+          <h1 class="font-semibold text-sm">Drag Race US</h1>
+          <h2 class="text-5xl font-bold">Season 17</h2>
+        </div>
+        <!--league Grid-->
+        <div class="grid md:grid-cols-4 mt-6 gap-8 league-grid">
+          <!-- Card template (hidden) -->
+          <template id="leagueCardTemplate">
+            <a class="league-card block" href="#">
+              <div class="league-card-top">
+                <i class="fi fi-rr-crown pt-2"></i>
+              </div>
+              <div class="league-card-bottom flex flex-row items-end">
+                <div class="flex-grow pt-3 min-w-0">
+                  <h1 class="text-xs text-neutral-600">Active</h1>
+                  <h2 class="text-2xl font-bold mt-1 truncate">
+                    {{LEAGUE_NAME}}
+                  </h2>
+                  <p class="text-[11px] text-neutral-500 truncate">
+                    Season {{SEASON_NUM}} • {{FRANCHISE_NAME}}
+                  </p>
+                </div>
+                <div>
+                  <span
+                    class="arrow-button size-7 rounded-full text-white flex items-center justify-center"
+                    ><i class="fi fi-rr-arrow-small-right text-xl pt-1"></i
+                  ></span>
+                </div>
+              </div>
+            </a>
+          </template>
+
+          <!-- Placeholder container (JS will fill with skeletons, then replace) -->
+          <div id="leagueGridItems" class="w-full"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+      (function () {
+        const grid = document.getElementById("leagueGridItems");
+        const tpl = document.getElementById("leagueCardTemplate");
+        const desktopTabs = document.querySelectorAll("[data-franchise]");
+        const mobileSelect = document.querySelector(".sm-filters select");
+        let currentFranchise = "us";
+        let allLeagues = []; // { id, name, season: { season_number, is_current, franchise: { slug, name } } }
+        let supabaseClient = null;
+
+        function showPlaceholders(count = 1) {
+          if (!grid) return;
+          grid.innerHTML = "";
+          grid.className = "grid md:grid-cols-4 mt-6 gap-8";
+          for (let i = 0; i < count; i++) {
+            const d = document.createElement("div");
+            d.className = "league-card-placeholder";
+            d.innerHTML =
+              '<div class="skeleton md:h-full h-[210px] w-full"></div>';
+            grid.appendChild(d);
+          }
+        }
+
+        function clearActiveTabs() {
+          desktopTabs.forEach((a) => a.classList.remove("filters-active"));
+        }
+
+        function setActiveFranchise(slug) {
+          currentFranchise = slug;
+          clearActiveTabs();
+          const active = Array.from(desktopTabs).find(
+            (a) => a.getAttribute("data-franchise") === slug
+          );
+          if (active) active.classList.add("filters-active");
+          if (mobileSelect && mobileSelect.value !== slug)
+            mobileSelect.value = slug;
+          render();
+        }
+
+        function leagueHref(id) {
+          const url = new URL("/pages/overview.html", location.origin);
+          url.searchParams.set("league", id);
+          return url.pathname + "?" + url.searchParams.toString();
+        }
+
+        function render() {
+          if (!grid) return;
+          grid.innerHTML = "";
+          grid.className = "";
+          const rows = allLeagues.filter(
+            (l) =>
+              (l.season?.franchise?.slug || "").toLowerCase() ===
+                currentFranchise &&
+              (l.season?.is_current ?? true)
+          );
+          if (rows.length === 0) {
+            // show a couple placeholders so the layout isn’t empty
+            showPlaceholders(1);
+            return;
+          }
+          for (const l of rows) {
+            const node = tpl.content.firstElementChild.cloneNode(true);
+            node.href = leagueHref(l.id);
+            const nameEl = node.querySelector("h2");
+            const subEl = node.querySelector("p");
+            if (nameEl) nameEl.textContent = l.name || "League";
+            if (subEl)
+              subEl.textContent = `Season ${l.season?.season_number ?? ""} • ${
+                l.season?.franchise?.name ?? ""
+              }`;
+            grid.appendChild(node);
+          }
+        }
+
+        // Supabase init from /supabase.txt (same pattern as auth page)
+        async function loadSupabase() {
+          const res = await fetch("/supabase.txt", { cache: "no-store" });
+          if (!res.ok) throw new Error("Failed to load supabase.txt");
+          const text = await res.text();
+          const map = Object.fromEntries(
+            text
+              .split(/\n+/)
+              .map((l) => l.trim())
+              .filter(Boolean)
+              .map((line) => {
+                const idx = line.indexOf("=");
+                return [line.slice(0, idx).trim(), line.slice(idx + 1).trim()];
+              })
+          );
+          const url =
+            map["SUPABASE_URL"] ||
+            map["SUPABASE_PROJECT_URL"] ||
+            (map["SUPABASE_PROJECT_ID"]
+              ? `https://${map["SUPABASE_PROJECT_ID"]}.supabase.co`
+              : "");
+          const key =
+            map["SUPABASE_ANON_KEY"] ||
+            map["PUBLIC_ANON_KEY"] ||
+            map["SUPABASE_PUBLIC_KEY"];
+          if (!url || !key)
+            throw new Error("Supabase URL/key missing in supabase.txt");
+          supabaseClient = window.supabase.createClient(url, key);
+        }
+
+        async function requireSession() {
+          const { data } = await supabaseClient.auth.getSession();
+          if (!data?.session) {
+            const ret = encodeURIComponent("/pages/leagues.html");
+            location.assign(`/pages/auth.html?returnTo=${ret}`);
+            return null;
+          }
+          return data.session;
+        }
+
+        async function fetchUserLeagues(userId) {
+          // 1) get league ids where user is a member
+          const { data: mem, error: memErr } = await supabaseClient
+            .from("league_members")
+            .select("league_id")
+            .eq("user_id", userId);
+          if (memErr) throw memErr;
+          const ids = (mem || []).map((x) => x.league_id);
+          if (ids.length === 0) return [];
+
+          // 2) fetch leagues with joined season + franchise
+          const { data: leagues, error: lgErr } = await supabaseClient
+            .from("leagues")
+            .select(
+              `id, name, season:seasons(id, season_number, is_current, franchise:franchises(slug, name))`
+            )
+            .in("id", ids)
+            .order("created_at", { ascending: false });
+          if (lgErr) throw lgErr;
+          return leagues || [];
+        }
+
+        // Wire filters
+        desktopTabs.forEach((a) =>
+          a.addEventListener("click", (e) => {
+            e.preventDefault();
+            const slug = a.getAttribute("data-franchise");
+            if (slug) setActiveFranchise(slug);
+          })
+        );
+        if (mobileSelect)
+          mobileSelect.addEventListener("change", () =>
+            setActiveFranchise(mobileSelect.value)
+          );
+
+        // Boot
+        (async () => {
+          try {
+            showPlaceholders();
+            await loadSupabase();
+            const session = await requireSession();
+            if (!session) return;
+            const leagues = await fetchUserLeagues(session.user.id);
+            allLeagues = leagues.filter((l) => l.season?.is_current !== false);
+            render();
+          } catch (e) {
+            console.error(e);
+            // keep placeholders if error, or show a gentle message
+            if (grid) {
+              grid.innerHTML = `<div class="text-xs text-neutral-500">Could not load leagues.</div>`;
+            }
+          }
+        })();
+      })();
+    </script>
+  </body>
+</html>
