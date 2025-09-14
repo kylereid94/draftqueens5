@@ -356,71 +356,21 @@
           return data || [];
         }
 
-        // Try multiple sources for roster to be resilient to schema naming
+        // Exact roster source per schema: v_member_roster_points
+        // Returns one row per contestant on the member's active roster with points earned while on roster
         async function fetchMyRoster(leagueId, userId) {
-          // 1) Preferred: a view with totals per rostered contestant
-          const tryViews = [
-            {
-              table: "v_member_roster_totals",
-              idCol: "contestant_id",
-              ptsCol: "points_on_roster",
-            },
-            {
-              table: "v_roster_points",
-              idCol: "contestant_id",
-              ptsCol: "points_on_roster",
-            },
-            {
-              table: "v_member_roster",
-              idCol: "contestant_id",
-              ptsCol: "points_on_roster",
-            },
-          ];
-          for (const v of tryViews) {
-            const { data, error } = await supabaseClient
-              .from(v.table)
-              .select(`${v.idCol}, ${v.ptsCol}`)
-              .eq("league_id", leagueId)
-              .eq("user_id", userId)
-              .order(v.ptsCol, { ascending: false })
-              .limit(100);
-            if (!error && data && data.length) {
-              return data.map((r) => ({
-                contestant_id: r[v.idCol],
-                points: r[v.ptsCol] ?? 0,
-              }));
-            }
-          }
-          // 2) Fallback: generic roster entries table
-          const candidates = [
-            {
-              table: "roster_entries",
-              idCol: "contestant_id",
-              ptsCol: "points_on_roster",
-            },
-            {
-              table: "member_roster",
-              idCol: "contestant_id",
-              ptsCol: "points_on_roster",
-            },
-          ];
-          for (const t of candidates) {
-            const { data, error } = await supabaseClient
-              .from(t.table)
-              .select(`${t.idCol}, ${t.ptsCol}`)
-              .eq("league_id", leagueId)
-              .eq("user_id", userId)
-              .order(t.ptsCol, { ascending: false })
-              .limit(100);
-            if (!error && data && data.length) {
-              return data.map((r) => ({
-                contestant_id: r[t.idCol],
-                points: r[t.ptsCol] ?? 0,
-              }));
-            }
-          }
-          // 3) Nothing found
-          return [];
+          const { data, error } = await supabaseClient
+            .from("v_member_roster_points")
+            .select("contestant_id, points_while_on_roster")
+            .eq("league_id", leagueId)
+            .eq("user_id", userId)
+            .order("points_while_on_roster", { ascending: false });
+
+          if (error) throw error;
+          return (data || []).map((r) => ({
+            contestant_id: r.contestant_id,
+            points: r.points_while_on_roster ?? 0,
+          }));
         }
 
         function renderRoster(items, contestantsById, leagueId) {
