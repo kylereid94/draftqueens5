@@ -31,6 +31,8 @@
       href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
     />
     <title>DraftQueen</title>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body class="min-h-screen bg-neutral-100 font-lexend">
     <div class="flex flex-col">
@@ -97,10 +99,14 @@
               class="menu menu-horizontal text-sm text-white space-x-10 font-semibold top-menu-1"
             >
               <li class="top-menu-1-active">
-                <a href="/pages/leagues.html">My Leagues</a>
+                <a href="/pages/leagues.html" data-keep-league>My Leagues</a>
               </li>
-              <li><a href="/pages/Challenges.html">Challenges</a></li>
-              <li><a href="/pages/profile.html">My Profile</a></li>
+              <li>
+                <a href="/pages/Challenges.html" data-keep-league>Challenges</a>
+              </li>
+              <li>
+                <a href="/pages/profile.html" data-keep-league>My Profile</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -118,7 +124,9 @@
             >Leagues</a
           >
           <span class="text-neutral-300">/</span>
-          <span class="font-semibold text-neutral-900">League Name</span>
+          <span id="roLeagueNameCrumb" class="font-semibold text-neutral-900"
+            >League Name</span
+          >
         </div>
         <!--right: subnav tabs-->
         <div class="hidden md:flex">
@@ -143,10 +151,10 @@
         </div>
         <!--mobile subnav-->
         <div class="md:hidden">
-          <select class="select rounded-full h-8 text-xs">
-            <option>Overview</option>
-            <option selected>My Roster</option>
-            <option>Scoreboard</option>
+          <select id="pageSelector" class="select rounded-full h-8 text-xs">
+            <option id="pageOverview">Overview</option>
+            <option id="pageMyRoster" selected>My Roster</option>
+            <option id="pageScoreboard">Scoreboard</option>
           </select>
         </div>
       </div>
@@ -158,17 +166,22 @@
           class="flex flex-col md:flex-row md:items-end md:justify-between gap-6"
         >
           <div>
-            <h1 class="font-semibold text-sm">Drag Race US</h1>
-            <h2 class="text-5xl font-bold">Season 17</h2>
+            <h1 id="roFranchise" class="font-semibold text-sm">Franchise</h1>
+            <h2 id="roSeason" class="text-5xl font-bold">Season</h2>
             <p class="text-neutral-500 text-xs mt-2">
               League:
-              <span class="font-semibold text-neutral-900">League Name</span>
+              <span
+                id="roLeagueNameHeader"
+                class="font-semibold text-neutral-900"
+                >League Name</span
+              >
             </p>
           </div>
           <!-- actions -->
           <div class="md:flex hidden items-center gap-3 md:gap-4">
             <a
               href="/pages/trade.html"
+              data-keep-league
               class="bg-neutral-900 text-white rounded-full h-9 px-4 text-xs font-semibold flex items-center gap-2"
               ><i class="fi fi-rr-exchange pt-[2px]"></i> Start a trade</a
             >
@@ -182,77 +195,61 @@
           <div
             class="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-6 mt-4"
           >
-            <!-- card template -->
-            <a
-              href="/pages/queen-details.html?id=000"
-              class="group rounded-3xl border-1 border-neutral-100 bg-white p-5 flex items-center gap-4 hover:border-neutral-200"
-            >
-              <div class="avatar">
-                <div class="w-12 h-12 rounded-full ring-1 ring-neutral-200">
-                  <img
-                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                  />
-                </div>
-              </div>
-              <div class="min-w-0 flex-1">
-                <p class="font-semibold truncate">Queen Name</p>
-              </div>
-              <div class="text-right">
-                <p class="text-xs text-neutral-500">Points</p>
-                <p class="text-2xl font-bold leading-none">34</p>
-              </div>
-            </a>
+            <ul id="roGrid" class="contents"></ul>
 
-            <a
-              href="/pages/queen-details.html?id=001"
-              class="group rounded-3xl border-1 border-neutral-100 bg-white p-5 flex items-center gap-4 hover:border-neutral-200"
-            >
-              <div class="avatar">
-                <div class="w-12 h-12 rounded-full ring-1 ring-neutral-200">
-                  <img
-                    src="https://img.daisyui.com/images/profile/demo/3@94.webp"
-                  />
+            <!-- card template (hidden) -->
+            <template id="roCardTpl">
+              <a
+                href="#"
+                class="group rounded-3xl border-1 border-neutral-100 bg-white p-5 flex items-center gap-4 hover:border-neutral-200"
+              >
+                <div class="avatar">
+                  <div class="w-12 h-12 rounded-full ring-1 ring-neutral-200">
+                    <img src="" alt="" />
+                  </div>
                 </div>
-              </div>
-              <div class="min-w-0 flex-1">
-                <p class="font-semibold truncate">Another Queen</p>
-              </div>
-              <div class="text-right">
-                <p class="text-xs text-neutral-500">Points</p>
-                <p class="text-2xl font-bold leading-none">27</p>
-              </div>
-            </a>
-
-            <a
-              href="/pages/queen-details.html?id=002"
-              class="group rounded-3xl border-1 border-neutral-100 bg-white p-5 flex items-center gap-4 hover:border-neutral-200"
-            >
-              <div class="avatar">
-                <div class="w-12 h-12 rounded-full ring-1 ring-neutral-200">
-                  <img
-                    src="https://img.daisyui.com/images/profile/demo/4@94.webp"
-                  />
+                <div class="min-w-0 flex-1">
+                  <p class="font-semibold truncate"></p>
                 </div>
-              </div>
-              <div class="min-w-0 flex-1">
-                <p class="font-semibold truncate">Third Queen</p>
-              </div>
-              <div class="text-right">
-                <p class="text-xs text-neutral-500">Points</p>
-                <p class="text-2xl font-bold leading-none">22</p>
-              </div>
-            </a>
+                <div class="text-right">
+                  <p class="text-xs text-neutral-500">Points</p>
+                  <p class="text-2xl font-bold leading-none"></p>
+                </div>
+              </a>
+            </template>
 
-            <!-- placeholder/skeleton card -->
-            <div
-              class="rounded-3xl border-1 border-neutral-100 bg-white p-5 flex items-center gap-4"
-            >
-              <div class="skeleton w-12 h-12 rounded-full"></div>
-              <div class="flex-1 space-y-2">
-                <div class="skeleton h-4 w-36 rounded-full"></div>
-                <div class="skeleton h-3 w-20 rounded-full"></div>
+            <!-- skeleton placeholders -->
+            <div id="roPlaceholders" class="contents">
+              <div
+                class="rounded-3xl border-1 border-neutral-100 bg-white p-5 flex items-center gap-4"
+              >
+                <div class="skeleton w-12 h-12 rounded-full"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="skeleton h-4 w-36 rounded-full"></div>
+                  <div class="skeleton h-3 w-20 rounded-full"></div>
+                </div>
+                <div class="skeleton h-6 w-10"></div>
               </div>
-              <div class="skeleton h-6 w-10"></div>
+              <div
+                class="rounded-3xl border-1 border-neutral-100 bg-white p-5 flex items-center gap-4"
+              >
+                <div class="skeleton w-12 h-12 rounded-full"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="skeleton h-4 w-36 rounded-full"></div>
+                  <div class="skeleton h-3 w-20 rounded-full"></div>
+                </div>
+                <div class="skeleton h-6 w-10"></div>
+              </div>
+              <div
+                class="rounded-3xl border-1 border-neutral-100 bg-white p-5 flex items-center gap-4"
+              >
+                <div class="skeleton w-12 h-12 rounded-full"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="skeleton h-4 w-36 rounded-full"></div>
+                  <div class="skeleton h-3 w-20 rounded-full"></div>
+                </div>
+                <div class="skeleton h-6 w-10"></div>
+              </div>
             </div>
           </div>
 
@@ -260,6 +257,7 @@
           <div class="mt-8 md:hidden">
             <a
               href="/pages/trade.html"
+              data-keep-league
               class="btn w-full h-12 rounded-xl bg-neutral-900 text-white border-0"
               >Start a trade</a
             >
@@ -267,6 +265,262 @@
         </div>
       </div>
     </div>
+    <script>
+      (function () {
+        const $ = (id) => document.getElementById(id);
+        const elCrumb = $("roLeagueNameCrumb");
+        const elHdr = $("roLeagueNameHeader");
+        const elFr = $("roFranchise");
+        const elSe = $("roSeason");
+        const grid = $("roGrid");
+        const tpl = $("roCardTpl");
+        const ph = $("roPlaceholders");
+        const pageSelector = document.getElementById("pageSelector");
+        let supabaseClient = null;
+
+        function setText(el, t) {
+          if (el) el.textContent = t;
+        }
+        function showPH(show) {
+          if (ph) ph.style.display = show ? "" : "none";
+        }
+
+        async function loadSupabase() {
+          if (supabaseClient) return supabaseClient;
+          const res = await fetch("/supabase.txt", { cache: "no-store" });
+          if (!res.ok) throw new Error("Failed to load supabase.txt");
+          const text = await res.text();
+          const map = Object.fromEntries(
+            text
+              .split(/\n+/)
+              .map((l) => l.trim())
+              .filter(Boolean)
+              .map((line) => {
+                const i = line.indexOf("=");
+                return [line.slice(0, i).trim(), line.slice(i + 1).trim()];
+              })
+          );
+          const url =
+            map["SUPABASE_URL"] ||
+            map["SUPABASE_PROJECT_URL"] ||
+            (map["SUPABASE_PROJECT_ID"]
+              ? `https://${map["SUPABASE_PROJECT_ID"]}.supabase.co`
+              : "");
+          const key =
+            map["SUPABASE_ANON_KEY"] ||
+            map["PUBLIC_ANON_KEY"] ||
+            map["SUPABASE_PUBLIC_KEY"];
+          if (!url || !key) throw new Error("Supabase URL/key missing");
+          supabaseClient = window.supabase.createClient(url, key);
+          return supabaseClient;
+        }
+
+        async function requireSession() {
+          const { data } = await supabaseClient.auth.getSession();
+          if (!data?.session) {
+            const ret = encodeURIComponent(
+              "/pages/roster.html" + location.search
+            );
+            location.assign(`/pages/auth.html?returnTo=${ret}`);
+            return null;
+          }
+          return data.session;
+        }
+
+        function getLeagueId() {
+          return (
+            (window.getCurrentLeagueId && window.getCurrentLeagueId()) ||
+            new URLSearchParams(location.search).get("league")
+          );
+        }
+
+        async function fetchLeague(leagueId) {
+          const { data, error } = await supabaseClient
+            .from("leagues")
+            .select(
+              "id, name, season:seasons(id, season_number, franchise:franchises(name))"
+            )
+            .eq("id", leagueId)
+            .maybeSingle();
+          if (error) throw error;
+          return data;
+        }
+
+        async function fetchContestants(ids) {
+          if (!ids || !ids.length) return [];
+          const { data, error } = await supabaseClient
+            .from("contestants")
+            .select("id, stage_name, avatar_url")
+            .in("id", ids);
+          if (error) throw error;
+          return data || [];
+        }
+
+        // Try multiple sources for roster to be resilient to schema naming
+        async function fetchMyRoster(leagueId, userId) {
+          // 1) Preferred: a view with totals per rostered contestant
+          const tryViews = [
+            {
+              table: "v_member_roster_totals",
+              idCol: "contestant_id",
+              ptsCol: "points_on_roster",
+            },
+            {
+              table: "v_roster_points",
+              idCol: "contestant_id",
+              ptsCol: "points_on_roster",
+            },
+            {
+              table: "v_member_roster",
+              idCol: "contestant_id",
+              ptsCol: "points_on_roster",
+            },
+          ];
+          for (const v of tryViews) {
+            const { data, error } = await supabaseClient
+              .from(v.table)
+              .select(`${v.idCol}, ${v.ptsCol}`)
+              .eq("league_id", leagueId)
+              .eq("user_id", userId)
+              .order(v.ptsCol, { ascending: false })
+              .limit(100);
+            if (!error && data && data.length) {
+              return data.map((r) => ({
+                contestant_id: r[v.idCol],
+                points: r[v.ptsCol] ?? 0,
+              }));
+            }
+          }
+          // 2) Fallback: generic roster entries table
+          const candidates = [
+            {
+              table: "roster_entries",
+              idCol: "contestant_id",
+              ptsCol: "points_on_roster",
+            },
+            {
+              table: "member_roster",
+              idCol: "contestant_id",
+              ptsCol: "points_on_roster",
+            },
+          ];
+          for (const t of candidates) {
+            const { data, error } = await supabaseClient
+              .from(t.table)
+              .select(`${t.idCol}, ${t.ptsCol}`)
+              .eq("league_id", leagueId)
+              .eq("user_id", userId)
+              .order(t.ptsCol, { ascending: false })
+              .limit(100);
+            if (!error && data && data.length) {
+              return data.map((r) => ({
+                contestant_id: r[t.idCol],
+                points: r[t.ptsCol] ?? 0,
+              }));
+            }
+          }
+          // 3) Nothing found
+          return [];
+        }
+
+        function renderRoster(items, contestantsById, leagueId) {
+          if (!grid || !tpl) return;
+          grid.innerHTML = "";
+          for (const it of items) {
+            const c = contestantsById.get(it.contestant_id);
+            const node = tpl.content.firstElementChild.cloneNode(true);
+            const a = node;
+            const img = node.querySelector("img");
+            const name = node.querySelector("p.font-semibold");
+            const pts = node.querySelector("div.text-right > p.text-2xl");
+            if (a) {
+              const url = new URL("/pages/queen-details.html", location.origin);
+              url.searchParams.set("queen", it.contestant_id);
+              if (leagueId) url.searchParams.set("league", leagueId);
+              a.href = url.pathname + "?" + url.searchParams.toString();
+              a.setAttribute("data-keep-league", "");
+            }
+            if (img)
+              img.src =
+                c?.avatar_url ||
+                "https://img.daisyui.com/images/profile/demo/2@94.webp";
+            if (img) img.alt = c?.stage_name || "Contestant";
+            if (name) name.textContent = c?.stage_name || "Unknown";
+            if (pts) pts.textContent = it.points ?? 0;
+            grid.appendChild(node);
+          }
+        }
+
+        (async () => {
+          try {
+            await loadSupabase();
+            const session = await requireSession();
+            if (!session) return;
+            const leagueId = getLeagueId();
+            if (!leagueId) return;
+
+            // Header
+            const lg = await fetchLeague(leagueId);
+            if (lg) {
+              setText(elCrumb, lg.name || "League");
+              setText(elHdr, lg.name || "League");
+              setText(elFr, lg.season?.franchise?.name || "Franchise");
+              setText(
+                elSe,
+                lg.season?.season_number
+                  ? `Season ${lg.season.season_number}`
+                  : "Season"
+              );
+            }
+
+            showPH(true);
+            // Roster
+            const items = await fetchMyRoster(leagueId, session.user.id);
+            if (!items.length) {
+              showPH(false);
+              // Optionally, show an empty-state card
+              const empty = document.createElement("div");
+              empty.className =
+                "rounded-3xl border-1 border-neutral-100 bg-white p-5 text-sm text-neutral-500";
+              empty.textContent = "No queens on your roster yet.";
+              grid.appendChild(empty);
+              return;
+            }
+            const ids = items.map((i) => i.contestant_id);
+            const contestants = await fetchContestants(ids);
+            const mapById = new Map(contestants.map((c) => [c.id, c]));
+            renderRoster(items, mapById, leagueId);
+            showPH(false);
+
+            // Mobile selector routing (preserve ?league)
+            function gotoLeaguePage(path) {
+              const url = new URL(path, location.origin);
+              if (leagueId) url.searchParams.set("league", leagueId);
+              location.assign(url.pathname + "?" + url.searchParams.toString());
+            }
+            if (pageSelector) {
+              pageSelector.addEventListener("change", () => {
+                const sel = pageSelector.options[pageSelector.selectedIndex];
+                switch (sel?.id) {
+                  case "pageOverview":
+                    gotoLeaguePage("/pages/overview.html");
+                    break;
+                  case "pageMyRoster":
+                    gotoLeaguePage("/pages/roster.html");
+                    break;
+                  case "pageScoreboard":
+                    gotoLeaguePage("/pages/scoreboard.html");
+                    break;
+                }
+              });
+            }
+          } catch (e) {
+            console.error(e);
+            showPH(false);
+          }
+        })();
+      })();
+    </script>
     <script src="/src/js/league-context.js"></script>
   </body>
 </html>
