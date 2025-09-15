@@ -1945,6 +1945,9 @@
   .w-72 {
     width: calc(var(--spacing) * 72);
   }
+  .w-80 {
+    width: calc(var(--spacing) * 80);
+  }
   .w-auto {
     width: auto;
   }
@@ -2222,6 +2225,9 @@
   }
   .bg-lightgray {
     background-color: var(--color-lightgray);
+  }
+  .bg-neutral-50 {
+    background-color: var(--color-neutral-50);
   }
   .bg-neutral-100 {
     background-color: var(--color-neutral-100);

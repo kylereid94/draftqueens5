@@ -108,11 +108,32 @@
                 <input type="text" placeholder="Search..." />
               </label>
             </div>
-            <div class="flex gap-8">
-              <a
-                class="btn btn-circle btn-ghost size-8 text-white border-1 border-lightgray-border"
-                ><i class="fi fi-sr-bell pt-1"></i
-              ></a>
+            <div class="flex gap-4">
+              <details id="webNoteBtn" class="dropdown dropdown-end">
+                <summary
+                  class="btn btn-circle btn-ghost size-8 text-white border-1 border-lightgray-border relative"
+                >
+                  <i class="fi fi-sr-bell pt-1"></i>
+                  <span
+                    id="webNotesBadge"
+                    class="absolute -top-1 -right-1 bg-neutral-900 text-white rounded-full min-w-4 h-4 px-1 flex items-center justify-center text-[10px] hidden"
+                  ></span>
+                </summary>
+                <div
+                  class="menu dropdown-content z-10 shadow-sm w-80 p-3 bg-white text-neutral-900 rounded-xl mt-2 space-y-1 font-semibold"
+                >
+                  <div class="text-xs text-neutral-500 px-1 pb-1">
+                    Notifications
+                  </div>
+                  <ul id="webNotesList" class="space-y-1">
+                    <li
+                      class="text-xs text-neutral-500 px-2 py-2 rounded-lg bg-neutral-50"
+                    >
+                      No notifications
+                    </li>
+                  </ul>
+                </div>
+              </details>
               <div class="avatar">
                 <div class="w-8 rounded-full ring-1 ring-white">
                   <img
@@ -768,6 +789,10 @@
       const mobileNotesList = document.getElementById("mobileNotesList");
       const mobileNotesBadge = document.getElementById("mobileNotesBadge");
 
+      const webNotesDetails = document.getElementById("webNoteBtn");
+      const webNotesList = document.getElementById("webNotesList");
+      const webNotesBadge = document.getElementById("webNotesBadge");
+
       // Access the Supabase client created in the IIFE lazily
       function getSupabase() {
         return window.supabaseClient || null;
@@ -858,6 +883,50 @@
         }
       }
 
+      function renderWebNotifications(rows) {
+        if (!webNotesList) return;
+        webNotesList.innerHTML = "";
+        if (!rows.length) {
+          const li = document.createElement("li");
+          li.className =
+            "text-xs text-neutral-500 px-2 py-2 rounded-lg bg-neutral-50";
+          li.textContent = "No notifications";
+          webNotesList.appendChild(li);
+          if (webNotesBadge) webNotesBadge.classList.add("hidden");
+          return;
+        }
+        let unread = 0;
+        for (const n of rows) {
+          if (n.is_read === false) unread++;
+          const a = document.createElement("a");
+          a.className =
+            "flex items-start gap-2 px-2 py-2 rounded-lg hover:bg-neutral-50 text-xs";
+          a.href = n.href || "#";
+          a.innerHTML = `
+              <span class="mt-0.5"><i class="fi fi-rr-bolt"></i></span>
+              <span class="flex-1 min-w-0">
+                <span class="block text-neutral-900 truncate">${
+                  n.title || "Notification"
+                }</span>
+                <span class="block text-[10px] text-neutral-500">${fmtSince(
+                  n.created_at
+                )}</span>
+              </span>
+            `;
+          const li = document.createElement("li");
+          li.appendChild(a);
+          webNotesList.appendChild(li);
+        }
+        if (webNotesBadge) {
+          if (unread > 0) {
+            webNotesBadge.textContent = String(unread);
+            webNotesBadge.classList.remove("hidden");
+          } else {
+            webNotesBadge.classList.add("hidden");
+          }
+        }
+      }
+
       async function refreshNotifications() {
         try {
           const sb = getSupabase();
@@ -873,6 +942,7 @@
           }
           const rows = await fetchNotifications(userId);
           renderNotifications(rows || []);
+          renderWebNotifications(rows || []);
         } catch {
           renderNotifications([]);
         }
@@ -889,6 +959,17 @@
         });
         // Also try to show a badge count shortly after page loads
         setTimeout(refreshNotifications, 800);
+      }
+      if (webNotesDetails) {
+        let loadedOnceWeb = false;
+        webNotesDetails.addEventListener("toggle", async () => {
+          if (webNotesDetails.open && !loadedOnceWeb) {
+            await refreshNotifications();
+            loadedOnceWeb = true;
+          }
+        });
+        // Also ensure badge is primed for desktop
+        setTimeout(refreshNotifications, 900);
       }
     </script>
     <script src="/src/js/league-context.js"></script>
