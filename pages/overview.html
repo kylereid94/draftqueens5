@@ -49,6 +49,34 @@
               class="fi fi-br-crown pt-1 md:text-2xl text-sm text-palepink rotate-30"
             ></i
           ></a>
+          <!--mobile notifications (dropdown) -->
+          <div class="mr-4">
+            <details id="mobileNoteBtn" class="dropdown dropdown-end">
+              <summary
+                class="btn btn-ghost rounded-full hover:bg-transparent hover:shadow-none text-white aspect-square size-9 flex md:hidden items-center justify-center border-lightgray-border border-1 relative"
+              >
+                <i class="fi fi-sr-bell pt-1"></i>
+                <span
+                  id="mobileNotesBadge"
+                  class="absolute bg-palepink rounded-full min-w-4 h-4 px-1 flex items-center justify-center text-[10px] -top-1 -right-1 hidden"
+                ></span>
+              </summary>
+              <div
+                class="menu dropdown-content z-10 shadow-sm w-72 p-3 bg-lightgray rounded-xl mt-2 text-white space-y-1 font-semibold"
+              >
+                <div class="text-xs text-neutral-300 px-1 pb-1">
+                  Notifications
+                </div>
+                <ul id="mobileNotesList" class="space-y-1">
+                  <li
+                    class="text-xs text-neutral-400 px-2 py-2 rounded-lg bg-[rgba(255,255,255,0.04)]"
+                  >
+                    No notifications
+                  </li>
+                </ul>
+              </div>
+            </details>
+          </div>
           <!--mobile menu-->
           <details class="dropdown dropdown-end">
             <summary
@@ -402,6 +430,8 @@
           if (!url || !key)
             throw new Error("Supabase URL/key missing in supabase.txt");
           supabaseClient = window.supabase.createClient(url, key);
+          // expose for scripts outside this IIFE (e.g., notifications block below)
+          window.supabaseClient = supabaseClient;
           return supabaseClient;
         }
 
@@ -732,6 +762,122 @@
           });
         }
       })();
+
+      // --- Mobile notifications dropdown wiring ---
+      const mobileNotesDetails = document.getElementById("mobileNoteBtn");
+      const mobileNotesList = document.getElementById("mobileNotesList");
+      const mobileNotesBadge = document.getElementById("mobileNotesBadge");
+
+      // Use the Supabase client created in the IIFE
+      const supabaseClient = window.supabaseClient;
+
+      function fmtSince(ts) {
+        try {
+          const d = new Date(ts);
+          const diff = (Date.now() - d.getTime()) / 1000;
+          if (diff < 60) return `${Math.floor(diff)}s`;
+          if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+          if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+          return `${Math.floor(diff / 86400)}d`;
+        } catch {
+          return "";
+        }
+      }
+
+      async function fetchNotifications(userId) {
+        // Try a canonical view first; fall back gracefully if it doesn't exist
+        const candidates = [
+          {
+            table: "v_user_notifications",
+            cols: "id, title, created_at, is_read, href",
+          },
+          {
+            table: "notifications",
+            cols: "id, title, created_at, is_read, href",
+          },
+        ];
+        for (const t of candidates) {
+          try {
+            const { data, error } = await supabaseClient
+              .from(t.table)
+              .select(t.cols)
+              .eq("user_id", userId)
+              .order("created_at", { ascending: false })
+              .limit(20);
+            if (!error && data) return data;
+          } catch {}
+        }
+        return [];
+      }
+
+      function renderNotifications(rows) {
+        if (!mobileNotesList) return;
+        mobileNotesList.innerHTML = "";
+        if (!rows.length) {
+          const li = document.createElement("li");
+          li.className =
+            "text-xs text-neutral-400 px-2 py-2 rounded-lg bg-[rgba(255,255,255,0.04)]";
+          li.textContent = "No notifications";
+          mobileNotesList.appendChild(li);
+          if (mobileNotesBadge) mobileNotesBadge.classList.add("hidden");
+          return;
+        }
+        let unread = 0;
+        for (const n of rows) {
+          if (n.is_read === false) unread++;
+          const a = document.createElement("a");
+          a.className =
+            "flex items-start gap-2 px-2 py-2 rounded-lg hover:bg-[rgba(255,255,255,0.06)] text-xs";
+          a.href = n.href || "#";
+          a.innerHTML = `
+              <span class="mt-0.5"><i class="fi fi-rr-bolt"></i></span>
+              <span class="flex-1 min-w-0">
+                <span class="block text-white truncate">${
+                  n.title || "Notification"
+                }</span>
+                <span class="block text-[10px] text-neutral-300">${fmtSince(
+                  n.created_at
+                )}</span>
+              </span>
+            `;
+          const li = document.createElement("li");
+          li.appendChild(a);
+          mobileNotesList.appendChild(li);
+        }
+        if (mobileNotesBadge) {
+          if (unread > 0) {
+            mobileNotesBadge.textContent = String(unread);
+            mobileNotesBadge.classList.remove("hidden");
+          } else {
+            mobileNotesBadge.classList.add("hidden");
+          }
+        }
+      }
+
+      async function refreshNotifications() {
+        try {
+          const { data: sess } = await supabaseClient.auth.getSession();
+          const userId = sess?.session?.user?.id;
+          if (!userId) return renderNotifications([]);
+          const rows = await fetchNotifications(userId);
+          renderNotifications(rows || []);
+        } catch {
+          renderNotifications([]);
+        }
+      }
+
+      if (mobileNotesDetails) {
+        // Load on first open
+        let loadedOnce = false;
+        mobileNotesDetails.addEventListener("toggle", async () => {
+          if (mobileNotesDetails.open && !loadedOnce) {
+            await refreshNotifications();
+            loadedOnce = true;
+          }
+        });
+        // Also try to show a badge count shortly after page loads
+        setTimeout(refreshNotifications, 800);
+      }
     </script>
     <script src="/src/js/league-context.js"></script>
   </body>
