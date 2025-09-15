@@ -768,8 +768,10 @@
       const mobileNotesList = document.getElementById("mobileNotesList");
       const mobileNotesBadge = document.getElementById("mobileNotesBadge");
 
-      // Use the Supabase client created in the IIFE
-      const supabaseClient = window.supabaseClient;
+      // Access the Supabase client created in the IIFE lazily
+      function getSupabase() {
+        return window.supabaseClient || null;
+      }
 
       function fmtSince(ts) {
         try {
@@ -785,6 +787,8 @@
       }
 
       async function fetchNotifications(userId) {
+        const sb = getSupabase();
+        if (!sb) return [];
         // Try a canonical view first; fall back gracefully if it doesn't exist
         const candidates = [
           {
@@ -798,7 +802,7 @@
         ];
         for (const t of candidates) {
           try {
-            const { data, error } = await supabaseClient
+            const { data, error } = await sb
               .from(t.table)
               .select(t.cols)
               .eq("user_id", userId)
@@ -856,9 +860,17 @@
 
       async function refreshNotifications() {
         try {
-          const { data: sess } = await supabaseClient.auth.getSession();
+          const sb = getSupabase();
+          if (!sb) {
+            setTimeout(refreshNotifications, 300);
+            return;
+          }
+          const { data: sess } = await sb.auth.getSession();
           const userId = sess?.session?.user?.id;
-          if (!userId) return renderNotifications([]);
+          if (!userId) {
+            renderNotifications([]);
+            return;
+          }
           const rows = await fetchNotifications(userId);
           renderNotifications(rows || []);
         } catch {
