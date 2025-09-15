@@ -43,7 +43,7 @@
           class="bg-neutral-900 md:border-r-1 border-r-0 border-r-neutral-100 md:w-55 w-full px-9 md:px-0 flex items-center"
         >
           <a
-            class="md:w-55 w-full text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-200 flex flex-row items-center md:text-4xl text-2xl font-calsans gap-1 md:justify-center h-full"
+            class="md:w-55 text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-200 flex flex-row items-center md:text-4xl text-2xl font-calsans gap-1 md:justify-center h-full"
             >Draft<i
               class="fi fi-br-crown pt-1 md:text-2xl text-sm text-palepink rotate-30"
             ></i
@@ -547,6 +547,194 @@
           });
         }
       })();
+
+      // --- Mobile notifications dropdown wiring ---
+      const mobileNotesDetails = document.getElementById("mobileNoteBtn");
+      const mobileNotesList = document.getElementById("mobileNotesList");
+      const mobileNotesBadge = document.getElementById("mobileNotesBadge");
+
+      const webNotesDetails = document.getElementById("webNoteBtn");
+      const webNotesList = document.getElementById("webNotesList");
+      const webNotesBadge = document.getElementById("webNotesBadge");
+
+      // Access the Supabase client created in the IIFE lazily
+      function getSupabase() {
+        return window.supabaseClient || null;
+      }
+
+      function fmtSince(ts) {
+        try {
+          const d = new Date(ts);
+          const diff = (Date.now() - d.getTime()) / 1000;
+          if (diff < 60) return `${Math.floor(diff)}s`;
+          if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+          if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+          return `${Math.floor(diff / 86400)}d`;
+        } catch {
+          return "";
+        }
+      }
+
+      async function fetchNotifications(userId) {
+        const sb = getSupabase();
+        if (!sb) return [];
+        // Try a canonical view first; fall back gracefully if it doesn't exist
+        const candidates = [
+          {
+            table: "v_user_notifications",
+            cols: "id, title, created_at, is_read, href",
+          },
+          {
+            table: "notifications",
+            cols: "id, title, created_at, is_read, href",
+          },
+        ];
+        for (const t of candidates) {
+          try {
+            const { data, error } = await sb
+              .from(t.table)
+              .select(t.cols)
+              .eq("user_id", userId)
+              .order("created_at", { ascending: false })
+              .limit(20);
+            if (!error && data) return data;
+          } catch {}
+        }
+        return [];
+      }
+
+      function renderNotifications(rows) {
+        if (!mobileNotesList) return;
+        mobileNotesList.innerHTML = "";
+        if (!rows.length) {
+          const li = document.createElement("li");
+          li.className =
+            "text-xs text-neutral-400 px-2 py-2 rounded-lg bg-[rgba(255,255,255,0.04)]";
+          li.textContent = "No notifications";
+          mobileNotesList.appendChild(li);
+          if (mobileNotesBadge) mobileNotesBadge.classList.add("hidden");
+          return;
+        }
+        let unread = 0;
+        for (const n of rows) {
+          if (n.is_read === false) unread++;
+          const a = document.createElement("a");
+          a.className =
+            "flex items-start gap-2 px-2 py-2 rounded-lg hover:bg-[rgba(255,255,255,0.06)] text-xs";
+          a.href = n.href || "#";
+          a.innerHTML = `
+              <span class="mt-0.5"><i class="fi fi-rr-bolt"></i></span>
+              <span class="flex-1 min-w-0">
+                <span class="block text-white truncate">${
+                  n.title || "Notification"
+                }</span>
+                <span class="block text-[10px] text-neutral-300">${fmtSince(
+                  n.created_at
+                )}</span>
+              </span>
+            `;
+          const li = document.createElement("li");
+          li.appendChild(a);
+          mobileNotesList.appendChild(li);
+        }
+        if (mobileNotesBadge) {
+          if (unread > 0) {
+            mobileNotesBadge.textContent = String(unread);
+            mobileNotesBadge.classList.remove("hidden");
+          } else {
+            mobileNotesBadge.classList.add("hidden");
+          }
+        }
+      }
+
+      function renderWebNotifications(rows) {
+        if (!webNotesList) return;
+        webNotesList.innerHTML = "";
+        if (!rows.length) {
+          const li = document.createElement("li");
+          li.className =
+            "text-xs text-neutral-500 px-2 py-2 rounded-lg bg-neutral-50";
+          li.textContent = "No notifications";
+          webNotesList.appendChild(li);
+          if (webNotesBadge) webNotesBadge.classList.add("hidden");
+          return;
+        }
+        let unread = 0;
+        for (const n of rows) {
+          if (n.is_read === false) unread++;
+          const a = document.createElement("a");
+          a.className =
+            "flex items-start gap-2 px-2 py-2 rounded-lg hover:bg-neutral-50 text-xs";
+          a.href = n.href || "#";
+          a.innerHTML = `
+              <span class="mt-0.5"><i class="fi fi-rr-bolt"></i></span>
+              <span class="flex-1 min-w-0">
+                <span class="block text-neutral-900 truncate">${
+                  n.title || "Notification"
+                }</span>
+                <span class="block text-[10px] text-neutral-500">${fmtSince(
+                  n.created_at
+                )}</span>
+              </span>
+            `;
+          const li = document.createElement("li");
+          li.appendChild(a);
+          webNotesList.appendChild(li);
+        }
+        if (webNotesBadge) {
+          if (unread > 0) {
+            webNotesBadge.textContent = String(unread);
+            webNotesBadge.classList.remove("hidden");
+          } else {
+            webNotesBadge.classList.add("hidden");
+          }
+        }
+      }
+
+      async function refreshNotifications() {
+        try {
+          const sb = getSupabase();
+          if (!sb) {
+            setTimeout(refreshNotifications, 300);
+            return;
+          }
+          const { data: sess } = await sb.auth.getSession();
+          const userId = sess?.session?.user?.id;
+          if (!userId) {
+            renderNotifications([]);
+            return;
+          }
+          const rows = await fetchNotifications(userId);
+          renderNotifications(rows || []);
+          renderWebNotifications(rows || []);
+        } catch {
+          renderNotifications([]);
+        }
+      }
+
+      if (mobileNotesDetails) {
+        // Load on first open
+        let loadedOnce = false;
+        mobileNotesDetails.addEventListener("toggle", async () => {
+          if (mobileNotesDetails.open && !loadedOnce) {
+            await refreshNotifications();
+            loadedOnce = true;
+          }
+        });
+        // Also try to show a badge count shortly after page loads
+        setTimeout(refreshNotifications, 800);
+      }
+      if (webNotesDetails) {
+        let loadedOnceWeb = false;
+        webNotesDetails.addEventListener("toggle", async () => {
+          if (webNotesDetails.open && !loadedOnceWeb) {
+            await refreshNotifications();
+            loadedOnceWeb = true;
+          }
+        });
+        // Also ensure badge is primed for desktop
+        setTimeout(refreshNotifications, 900);
+      }
     </script>
   </body>
 </html>
