@@ -443,23 +443,13 @@
 
         async function fetchUserLeagues(userId) {
           await ensureAuthReady();
-          // 1) get league ids where user is a member
-          const { data: mem, error: memErr } = await supabaseClient
-            .from("league_members")
-            .select("league_id")
-            .eq("user_id", userId);
-          if (memErr) throw memErr;
-          const ids = (mem || []).map((x) => x.league_id);
-          if (ids.length === 0) return [];
-
-          // 2) fetch leagues (no embedded joins)
-          const { data: leagues, error: lgErr } = await supabaseClient
-            .from("leagues")
-            .select("id, name, season_id, created_at")
-            .in("id", ids)
-            .order("created_at", { ascending: false });
-          if (lgErr) throw lgErr;
-          if (!leagues || leagues.length === 0) return [];
+          // Use a SECURITY DEFINER RPC to avoid RLS recursion on direct table SELECTs
+          const { data: leaguesMin, error: rpcErr } = await supabaseClient.rpc(
+            "user_leagues_min"
+          );
+          if (rpcErr) throw rpcErr;
+          const leagues = leaguesMin || [];
+          if (!leagues.length) return [];
 
           // 3) fetch seasons for those leagues
           const seasonIds = Array.from(
@@ -494,7 +484,7 @@
           }
 
           // 5) stitch
-          return (leagues || []).map((l) => {
+          return leagues.map((l) => {
             const season = seasonsById.get(l.season_id) || null;
             const franchise = season
               ? franchisesById.get(season.franchise_id) || null
