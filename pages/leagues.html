@@ -428,16 +428,73 @@
           const ids = (mem || []).map((x) => x.league_id);
           if (ids.length === 0) return [];
 
-          // 2) fetch leagues with joined season + franchise
+          // 2) fetch leagues (no embedded joins)
           const { data: leagues, error: lgErr } = await supabaseClient
             .from("leagues")
-            .select(
-              `id, name, season:seasons(id, season_number, is_current, franchise:franchises(slug, name))`
-            )
+            .select("id, name, season_id, created_at")
             .in("id", ids)
             .order("created_at", { ascending: false });
           if (lgErr) throw lgErr;
-          return leagues || [];
+          if (!leagues || leagues.length === 0) return [];
+
+          // 3) fetch seasons for those leagues
+          const seasonIds = Array.from(
+            new Set(leagues.map((l) => l.season_id).filter(Boolean))
+          );
+          let seasonsById = new Map();
+          if (seasonIds.length) {
+            const { data: seasons, error: seErr } = await supabaseClient
+              .from("seasons")
+              .select("id, season_number, is_current, franchise_id")
+              .in("id", seasonIds);
+            if (seErr) throw seErr;
+            seasonsById = new Map((seasons || []).map((s) => [s.id, s]));
+          }
+
+          // 4) fetch franchises for those seasons
+          const franchiseIds = Array.from(
+            new Set(
+              Array.from(seasonsById.values())
+                .map((s) => s.franchise_id)
+                .filter(Boolean)
+            )
+          );
+          let franchisesById = new Map();
+          if (franchiseIds.length) {
+            const { data: frs, error: frErr } = await supabaseClient
+              .from("franchises")
+              .select("id, slug, name")
+              .in("id", franchiseIds);
+            if (frErr) throw frErr;
+            franchisesById = new Map((frs || []).map((f) => [f.id, f]));
+          }
+
+          // 5) stitch
+          return (leagues || []).map((l) => {
+            const season = seasonsById.get(l.season_id) || null;
+            const franchise = season
+              ? franchisesById.get(season.franchise_id) || null
+              : null;
+            return {
+              id: l.id,
+              name: l.name,
+              created_at: l.created_at,
+              season: season
+                ? {
+                    id: season.id,
+                    season_number: season.season_number,
+                    is_current: season.is_current,
+                    franchise: franchise
+                      ? {
+                          id: franchise.id,
+                          slug: franchise.slug,
+                          name: franchise.name,
+                        }
+                      : null,
+                  }
+                : null,
+            };
+          });
         }
 
         // Wire filters
