@@ -409,14 +409,18 @@
               persistSession: true,
               autoRefreshToken: true,
               detectSessionInUrl: true,
-              storageKey: "dq-auth",
             },
           });
           window.supabaseClient = supabaseClient;
         }
 
         async function requireSession() {
-          const { data } = await supabaseClient.auth.getSession();
+          // Try once (in case ensureAuthReady restored it)
+          let { data } = await supabaseClient.auth.getSession();
+          if (data?.session) return data.session;
+          // Small grace wait then retry once more
+          await new Promise((r) => setTimeout(r, 150));
+          ({ data } = await supabaseClient.auth.getSession());
           if (!data?.session) {
             const ret = encodeURIComponent("/pages/leagues.html");
             location.assign(`/pages/auth.html?returnTo=${ret}`);
