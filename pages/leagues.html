@@ -462,7 +462,20 @@
             if (!session) return;
             const leagues = await fetchUserLeagues(session.user.id);
             allLeagues = leagues.filter((l) => l.season?.is_current !== false);
-            render();
+            // If the current tab (default 'us') has no leagues, switch to the first available franchise automatically
+            const hasInCurrent = allLeagues.some(
+              (l) =>
+                (l.season?.franchise?.slug || "").toLowerCase() ===
+                currentFranchise
+            );
+            if (!hasInCurrent && allLeagues.length) {
+              const firstSlug = (
+                allLeagues[0].season?.franchise?.slug || "us"
+              ).toLowerCase();
+              setActiveFranchise(firstSlug);
+            } else {
+              render();
+            }
           } catch (e) {
             console.error(e);
             // keep placeholders if error, or show a gentle message
