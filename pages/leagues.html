@@ -607,7 +607,7 @@
               .from(t.table)
               .select(t.cols)
               .eq("user_id", userId)
-              .order("created_at", { ascending: false })
+              .order("joined_at", { ascending: false })
               .limit(20);
             if (!error && data) return data;
           } catch {}
