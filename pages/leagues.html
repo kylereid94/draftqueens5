@@ -404,7 +404,14 @@
             map["SUPABASE_PUBLIC_KEY"];
           if (!url || !key)
             throw new Error("Supabase URL/key missing in supabase.txt");
-          supabaseClient = window.supabase.createClient(url, key);
+          supabaseClient = window.supabase.createClient(url, key, {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true,
+              storageKey: "dq-auth",
+            },
+          });
           window.supabaseClient = supabaseClient;
         }
 
@@ -418,7 +425,20 @@
           return data.session;
         }
 
+        // Wait until auth token is ready (access_token present) before DB calls
+        async function ensureAuthReady(maxWaitMs = 3000) {
+          const start = Date.now();
+          while (Date.now() - start < maxWaitMs) {
+            const { data } = await supabaseClient.auth.getSession();
+            const token = data?.session?.access_token;
+            if (token) return true;
+            await new Promise((r) => setTimeout(r, 100));
+          }
+          return false;
+        }
+
         async function fetchUserLeagues(userId) {
+          await ensureAuthReady();
           // 1) get league ids where user is a member
           const { data: mem, error: memErr } = await supabaseClient
             .from("league_members")
@@ -515,8 +535,12 @@
           try {
             showPlaceholders();
             await loadSupabase();
+            // Make sure the auth token is ready so Authorization header is sent
+            await ensureAuthReady();
             const session = await requireSession();
             if (!session) return;
+            // Optional diagnostics: log token presence
+            console.debug("auth ready", Boolean(session?.access_token));
             const leagues = await fetchUserLeagues(session.user.id);
             allLeagues = leagues.filter((l) => l.season?.is_current !== false);
             // If the current tab (default 'us') has no leagues, switch to the first available franchise automatically
